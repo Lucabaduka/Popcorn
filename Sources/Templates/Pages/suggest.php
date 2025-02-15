@@ -19,7 +19,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   } catch (Throwable $e) {
 
     $status = 1;
-    $snacks = '<div class="notification is-danger" id="snacks">Something has gone wrong here.<br>' . $e->getLine() . ': ' . $e->getMessage() . '</code></div>';
+    $snacks = "<div class=\"notification is-danger\" id=\"snacks\">Something has gone wrong here.<br>"
+               . $e->getLine() . ": " . $e->getMessage() . "</code></div>";
   }
 
   }
