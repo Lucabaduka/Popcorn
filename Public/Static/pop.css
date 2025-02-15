@@ -109,7 +109,7 @@ fieldset {
   width: 200px;
   position: fixed;
   right: 25px;
-  top: 75px;
+  bottom: 1em;
   z-index: 1;
 }
 .slap {

@@ -36,6 +36,44 @@ function db_build($dbname) {
   $pdo = null;
 }
 
+// A function to retrieve the operator's profile
+// Called whenever any page on Popcorn is loaded
+// Returns an array of the Operators table based on ID
+function get_operator ($pdo, $context) {
+
+  // Check if the operator's profile is in the operators table
+  $query = $pdo->prepare("SELECT * FROM operators WHERE id = (?)");
+  $query->execute(array($context["user"]["id"]));
+  $result = $query->fetchAll();
+
+  // if not, then we need to create it with values from the forum and 25,000 planets
+  if (count($result) < 1) {
+    $dummy = array($context["user"]["id"], $context["user"]["name"], 25000, 0, array());
+    $order = $pdo->prepare("INSERT INTO operators ('id', 'pdn', 'bal', 'staked', 'active') VALUES (?, ?, ?, ?, ?)");
+    $order->execute($dummy);
+    $result[0] = $dummy;
+  }
+
+  // Determine the maximum bet size between what's available
+  // A player must always be able to make at least a 5,000  planet bet
+  if (($result[0]["bal"] - $result[0]["staked"]) < 5000) {
+    $max_bet = 5000;
+  } else {
+    $max_bet = ($result[0]["bal"] - $result[0]["staked"]);
+  }
+
+  // Compress them all of our data into a more tidy function
+  $operator = array(
+    "id"     => $result[0]["id"],
+    "pdn"    => $result[0]["pdn"],
+    "bal"    => $result[0]["bal"],
+    "staked" => $result[0]["staked"],
+    "max"    => $max_bet
+  );
+
+  return $operator;
+
+}
 
 // Function to reduce a fraction to its lowest form
 // NOTE TO LUCA, VALUES NEED TO BE ROUNDED

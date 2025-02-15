@@ -78,21 +78,21 @@
               <strong>Balance:</strong>
             </div>
             <div class="cell">
-              <code>5,000</code>
+              <code><?=number_format($op["bal"])?></code>
             </div>
 
             <div class="cell">
               <strong>Staked:</strong>
             </div>
             <div class="cell">
-              <code>5,000</code>
+              <code><?=number_format($op["staked"])?></code>
             </div>
 
             <div class="cell">
               <strong>Max Bet:</strong>
             </div>
             <div class="cell">
-              <code>5,000</code>
+              <code><?=number_format($op["max"])?></code>
             </div>
           </div>
           <div>
@@ -105,15 +105,15 @@
 
           <div class="is-flex" style="flex-wrap:wrap;">
             <div class="cell my-1 mx-2">
-              <strong>Balance:</strong> <code>5,000</code>
+              <strong>Balance:</strong> <code><?=number_format($op["bal"])?></code>
             </div>
 
             <div class="cell my-1 mx-2">
-              <strong>Staked:</strong> <code>5,000</code>
+              <strong>Staked:</strong> <code><?=number_format($op["staked"])?></code>
             </div>
 
             <div class="cell my-1 mx-2">
-              <strong>Max Bet:</strong> <code>5,000</code>
+              <strong>Max Bet:</strong> <code><?=number_format($op["max"])?></code>
             </div>
           </div>
 

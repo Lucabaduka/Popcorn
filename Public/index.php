@@ -2,6 +2,13 @@
 
 $version = "0.1.0";
 
+// Testing
+$user_info["groups"] = array(9);
+$context["user"]["is_logged"] = true;
+$context["user"]["id"] = 1;
+$context["user"]["name"] = "Luca";
+$context["user"]["is_admin"] = true;
+
 // Load any libraries of functions and classes we've prepared earlier
 require("../Sources/Gears/gears.php");
 
@@ -17,12 +24,7 @@ $scripts = "/Static/Scripts/";
 $status = 0;
 $snacks = "";
 
-// Testing
-$user_info["groups"] = array(9);
-$context["user"]["is_logged"] = true;
-$context["user"]["id"] = 1;
-$context["user"]["name"] = "Luca";
-$context["user"]["is_admin"] = true;
+$op = get_operator($pdo, $context);
 
 // Handle the routing to our blessed site
 $request = $_SERVER["REQUEST_URI"];
