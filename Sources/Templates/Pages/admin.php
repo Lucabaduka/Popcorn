@@ -155,11 +155,10 @@ foreach ($pdo->query($query) as $issue) {
         <tr>
           <th class="is-link has-text-centered">Category</th>
           <th class="is-link has-text-centered">Question</th>
-          <th class="is-link has-text-centered">Context</th>
           <th class="is-link has-text-centered">Options</th>
           <th class="is-link has-text-centered">Ends</th>
-          <th class="is-link has-text-centered">Result</th>
-          <th class="is-link has-text-centered">Resolution</th>
+          <th class="is-link has-text-centered">Status</th>
+          <th class="is-link has-text-centered">Edit</th>
         </tr>
       </thead>
 
@@ -170,7 +169,6 @@ foreach ($pdo->query($query) as $issue) {
         <tr>
           <td><?=$issue["cat"]?></td>
           <td><?=$issue["question"]?></td>
-          <td><?=$issue["context"]?></td>
 
           <td>
             <?php
@@ -186,7 +184,7 @@ foreach ($pdo->query($query) as $issue) {
           </td>
 
           <td><?=date("Y-m-d H:i:s ", $issue["ends"])?></td>
-          <td><?=$issue["result"]?></td>
+          <td><?php $status = $issue["result"] === 0 ? "Current" : "Pending"; echo $status;?></td>
           <td><?=$issue["resolution"]?></td>
         </tr>
 
