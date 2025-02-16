@@ -1,8 +1,58 @@
 <?php
 
+function new_issue($pdo, $issue_data) {
+
+  // We can't require fields in this modal because of how we handle modals in general
+  // Therefore we will simply validate the form here in the backend.
+  $fail = 0;
+  $reason = "";
+  $required = ["question", "context", "category", "date_end"];
+  foreach ($required as $requirement) {
+    if (!isset($issue_data["question"])) {
+      $fail = 1;
+      $reason .= " " . $requirement;
+    }
+  }
+  if ($fail > 0) {
+    return 1;
+  }
+
+  // Default unset hours to midnight
+  if (strlen($issue_data["time_end"]) < 1) {
+    $issue_data["time_end"] = "00:00";
+  }
+
+  // Translate the datetime input to unix
+  $issue_data["ends"] = strtotime($issue_data["date_end"] . " " . $issue_data["time_end"] . ":00");
+
+  // We must now handle options
+  // By default, all options will have a colour set from the select, so we must exclude any that don't have a name
+  foreach ($issue_data["options"] as $entry) {
+    if (strlen($entry["text"]) > 0) {
+      $issue_data["c_options"] = $entry;
+    }
+  }
+
+  // We presume all is well at this point.
+  $issue = array(NULL,                                  // id INTEGER PRIMARY KEY
+                 $issue_data["catagory"],               // cat TEXT
+                 $issue_data["question"],               // question TEXT
+                 $issue_data["context"],                // context TEXT
+                 json_encode($issue_data["c_options"]), // options JSON
+                 $issue_data["ends"],                   // ends INTEGER
+                 0,                                     // result INTEGER (-1: awaiting resolution, 0: on-going, 1: finished)
+                 "",                                    // resolution TEXT (what admin writes to describe the outcome)
+                );
+
+  $order = $pdo->prepare("INSERT INTO topics ('id', 'cat', 'question', 'context', 'options', 'ends', 'result', 'resolution')
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+  $order->execute($issue);
+
+  return 0;
+}
+
 // We have received some kind of form request
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-  var_dump($_POST);
 
   try {
 
@@ -20,21 +70,33 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       $status = 1;
       $snacks = "<div class=\"notification is-info\" id=\"snacks\">Successfully obliterated <code>" .
       $order->rowCount() . "</code> suggestion". pluralise($order->rowCount()) . " </div>.";
-    } elseif  (isset($_POST["question"])) {
-
-
-
-
-
     }
 
+    // This request was to add a new issue to the database
+    elseif  (isset($_POST["new_issue"])) {
 
+      // Move things out of $_POST to a more reliably maliable variable
+      $issue_data = $_POST["new_issue"];
+      $send_issue = new_issue($pdo, $issue_data);
+
+      // Send feedback. The function returns a 0 for success and 1 for failure.
+      if ($send_issue === 0) {
+        $status = 1;
+        $snacks = "<div class=\"notification is-info\" id=\"snacks\">Successfully added <code>" . $issue_data["question"] .
+        "</code> to the issue database.</div>";
+
+      } else {
+        $status = 1;
+        $snacks = "<div class=\"notification is-danger\" id=\"snacks\">Some required fields were missing
+        from the New Issue form.</div>";
+      }
+    }
 
   // Or send back a failure response with a message no one will probably see.
   } catch (Throwable $e) {
     $status = 1;
-    $snacks = '<div class="notification is-danger" id="snacks">Something has gone wrong here.
-    An error report has been logged to the server.</div>';
+    $snacks = "<div class=\"notification is-danger\" id=\"snacks\">Something has gone wrong here.
+    An error report has been logged to the server.</div>";
     error_log("--- Script error in admin.php (" . date("Y-m-d H:i:s ", time()) . ") ---\n" . $e . "\n\n", 3, $errors);
   }
 }

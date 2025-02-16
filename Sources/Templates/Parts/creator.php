@@ -7,7 +7,7 @@
       <button class="is-large delete" aria-label="close"></button>
     </header>
 
-    <form name="new_issue" method="POST">
+    <form method="POST">
       <section class="modal-card-body">
 
       <div class="field is-horizontal">
@@ -16,11 +16,11 @@
         </div>
         <div class="field-body">
           <div class="field">
-            <input class="input is-info" name="question" type="text">
+            <input class="input is-info" name="new_issue[question]" type="text">
           </div>
           <div class="field">
-            <div name="category" class="select is-info">
-              <select>
+            <div class="select is-info">
+              <select name="new_issue[category]">
                 <option value="admin">🟣 Administrative</option>
                 <option value="conflict">🔴 Conflict</option>
                 <option value="economy">🟢 Economics</option>
@@ -38,23 +38,23 @@
         </div>
         <div class="field-body">
           <div class="field">
-            <textarea class="textarea is-info" placeholder="Explain more about the context and premise of the question."></textarea>
+            <textarea name="new_issue[context]" class="textarea is-info" placeholder="Explain more about the context and premise of the question."></textarea>
           </div>
         </div>
       </div>
 
       <div class="field is-horizontal" id="theme_1">
         <div class="field-label is-normal">
-          <label class="label" for="question">Option 1</label>
+          <label class="label" for="new_issue[options][0][text]">Option 1</label>
         </div>
 
         <div class="field-body">
           <div class="field">
-            <input class="input is-info" name="option_1" type="text">
+            <input class="input is-info" name="new_issue[options][0][text]" type="text">
           </div>
           <div class="field">
             <div name="category" class="select is-info">
-              <select id="selector_1" name="theme_1">
+              <select id="selector_1" name="new_issue[options][0][colour]">
 
                 <optgroup label="Blue Themes">
                   <?php foreach ($blues_lib as $colour): ?>
@@ -95,16 +95,16 @@
 
       <div class="field is-horizontal" id="theme_2">
         <div class="field-label is-normal">
-          <label class="label" for="question">Option 2</label>
+          <label class="label" for="new_issue[options][1][text]">Option 2</label>
         </div>
 
         <div class="field-body">
           <div class="field">
-            <input class="input is-info" name="option_2" type="text">
+            <input class="input is-info" name="new_issue[options][1][text]" type="text">
           </div>
           <div class="field">
             <div name="category" class="select is-info">
-              <select id="selector_2" name="theme_2">
+              <select id="selector_2" name="new_issue[options][1][colour]">
 
                 <optgroup label="Blue Themes">
                   <?php foreach ($blues_lib as $colour): ?>
@@ -144,16 +144,16 @@
 
       <div class="field is-horizontal" id="theme_3">
         <div class="field-label is-normal">
-          <label class="label" for="question">Option 3</label>
+          <label class="label" for="new_issue[options][2][text]">Option 3</label>
         </div>
 
         <div class="field-body">
           <div class="field">
-            <input class="input is-info" name="option_3" type="text">
+            <input class="input is-info" name="new_issue[options][2][text]" type="text">
           </div>
           <div class="field">
             <div name="category" class="select is-info">
-              <select id="selector_3" name="theme_3">
+              <select id="selector_3" name="new_issue[options][2][colour]">
 
                 <optgroup label="Blue Themes">
                   <?php foreach ($blues_lib as $colour): ?>
@@ -193,16 +193,16 @@
 
       <div class="field is-horizontal" id="theme_4">
         <div class="field-label is-normal">
-          <label class="label" for="question">Option 4</label>
+          <label class="label" for="new_issue[options][3][text]">Option 4</label>
         </div>
 
         <div class="field-body">
           <div class="field">
-            <input class="input is-info" name="option_4" type="text">
+            <input class="input is-info" name="new_issue[options][3][text]" type="text">
           </div>
           <div class="field">
             <div name="category" class="select is-info">
-              <select id="selector_4" name="theme_4">
+              <select id="selector_4" name="new_issue[options][3][colour]">
 
                 <optgroup label="Blue Themes">
                   <?php foreach ($blues_lib as $colour): ?>
@@ -242,16 +242,16 @@
 
       <div class="field is-horizontal" id="theme_5">
         <div class="field-label is-normal">
-          <label class="label" for="question">Option 5</label>
+          <label class="label" for="new_issue[options][4][text]">Option 5</label>
         </div>
 
         <div class="field-body">
           <div class="field">
-            <input class="input is-info" name="option_5" type="text">
+            <input class="input is-info" name="new_issue[options][4][text]" type="text">
           </div>
           <div class="field">
             <div name="category" class="select is-info">
-              <select id="selector_5" name="theme_5">
+              <select id="selector_5" name="new_issue[options][4][colour]">
 
                 <optgroup label="Blue Themes">
                   <?php foreach ($blues_lib as $colour): ?>
@@ -289,14 +289,14 @@
         </div>
       </div>
 
-      <div class="field is-horizontal" id="theme_4">
+      <div class="field is-horizontal">
         <div class="field-label is-normal">
-          <label class="label" for="question">Betting Ends</label>
+          <label class="label" for="new_issue[date_end]">Betting Ends</label>
         </div>
         <div class="field-body">
           <div class="field">
-            <input type="date" id="start" name="date_start" value="<?=date("Y-m-d", time())?>" min="<?=date("Y-m-d", time())?>"/>
-            <input type="time" id="start" name="time_start"/>
+            <input type="date" name="new_issue[date_end]" value="<?=date("Y-m-d", time())?>" min="<?=date("Y-m-d", time())?>"/>
+            <input type="time" name="new_issue[time_end]"/>
           </div>
         </div>
       </div>
