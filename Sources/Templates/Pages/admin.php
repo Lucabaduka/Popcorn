@@ -9,7 +9,7 @@ function new_issue($pdo, $issue_data) {
   // Therefore we will simply validate the form here in the backend.
   $required = ["question", "context", "category", "date_end"];
   foreach ($required as $requirement) {
-    if (!isset($issue_data["question"])) return 1;
+    if (!isset($issue_data[$requirement]) || $issue_data[$requirement] === "") return 1;
   }
 
   // Default unset hours to midnight
@@ -20,12 +20,12 @@ function new_issue($pdo, $issue_data) {
 
   // By default, all options will have a colour set from the select, so we must exclude any that don't have a name
   foreach ($issue_data["options"] as $entry) {
-    if (strlen($entry["text"]) > 0) $issue_data["c_options"] = $entry;
+    if (strlen($entry["text"]) > 0) $issue_data["c_options"][] = $entry;
   }
 
   // We presume all is well at this point.
   $issue = array(NULL,                                  // id INTEGER PRIMARY KEY
-                 $issue_data["catagory"],               // cat TEXT
+                 $issue_data["category"],               // cat TEXT
                  $issue_data["question"],               // question TEXT
                  $issue_data["context"],                // context TEXT
                  json_encode($issue_data["c_options"]), // options JSON
@@ -98,6 +98,14 @@ foreach ($pdo->query($query) as $idea) {
   $x++;
 }
 
+// Collect all current and pending issues, and commit them to an array
+$x = 0;
+$issues = array();
+$query =  "SELECT * FROM topics WHERE result < 2 ORDER BY ends ASC;";
+foreach ($pdo->query($query) as $issue) {
+  $issues[$x] = $issue;
+  $x++;
+}
 ?>
 
 <!DOCTYPE html>
@@ -139,10 +147,54 @@ foreach ($pdo->query($query) as $idea) {
 
   <!-- Active Vote Section -->
   <div class="notification">
-    <button class="button is-link js-modal-trigger is-pulled-right" data-target="js-modal">New Issue</button>
+    <button class="button is-success js-modal-trigger is-pulled-right" data-target="js-modal">New Issue</button>
     <h1 class="title is-4">Active Issues</h1>
 
-    <!-- cat TEXT, question TEXT, context TEXT, options JSON, ends INTEGER, result INTEGER, resolution TEXT -->
+    <table class="table is-fullwidth has-text-centered">
+      <thead>
+        <tr>
+          <th class="is-link has-text-centered">Category</th>
+          <th class="is-link has-text-centered">Question</th>
+          <th class="is-link has-text-centered">Context</th>
+          <th class="is-link has-text-centered">Options</th>
+          <th class="is-link has-text-centered">Ends</th>
+          <th class="is-link has-text-centered">Result</th>
+          <th class="is-link has-text-centered">Resolution</th>
+        </tr>
+      </thead>
+
+      <!-- Dynamic Suggestion Table/Form -->
+      <tbody>
+
+      <?php foreach ($issues as $issue): $issue["options"] = json_decode($issue["options"], True); ?>
+        <tr>
+          <td><?=$issue["cat"]?></td>
+          <td><?=$issue["question"]?></td>
+          <td><?=$issue["context"]?></td>
+
+          <td>
+            <?php
+              $count = 0;
+              foreach ($issue["options"] as $option) {
+                echo $option["text"];
+                $count++;
+                if ($count < count($issue["options"])) {
+                  echo ", ";
+                }
+              }
+            ?>
+          </td>
+
+          <td><?=date("Y-m-d H:i:s ", $issue["ends"])?></td>
+          <td><?=$issue["result"]?></td>
+          <td><?=$issue["resolution"]?></td>
+        </tr>
+
+      <?php endforeach; ?>
+
+      </tbody>
+
+    </table>
 
   </div>
 
