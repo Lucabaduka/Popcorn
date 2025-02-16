@@ -48,7 +48,7 @@ function get_operator ($pdo, $context) {
 
   // if not, then we need to create it with values from the forum and 25,000 planets
   if (count($result) < 1) {
-    $dummy = array($context["user"]["id"], $context["user"]["name"], 25000, 0, array());
+    $dummy = array($context["user"]["id"], $context["user"]["name"], 25000, 0, json_encode(array()));
     $order = $pdo->prepare("INSERT INTO operators ('id', 'pdn', 'bal', 'staked', 'active') VALUES (?, ?, ?, ?, ?)");
     $order->execute($dummy);
     $result[0] = $dummy;
