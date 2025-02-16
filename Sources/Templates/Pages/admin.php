@@ -1,36 +1,26 @@
 <?php
 
+// Function to take form data from the admin page and insert a new issue to the database
+// Called when the issue modal closes via the submit button
+// Returns a 0 on success or a 1 on failure
 function new_issue($pdo, $issue_data) {
 
   // We can't require fields in this modal because of how we handle modals in general
   // Therefore we will simply validate the form here in the backend.
-  $fail = 0;
-  $reason = "";
   $required = ["question", "context", "category", "date_end"];
   foreach ($required as $requirement) {
-    if (!isset($issue_data["question"])) {
-      $fail = 1;
-      $reason .= " " . $requirement;
-    }
-  }
-  if ($fail > 0) {
-    return 1;
+    if (!isset($issue_data["question"])) return 1;
   }
 
   // Default unset hours to midnight
-  if (strlen($issue_data["time_end"]) < 1) {
-    $issue_data["time_end"] = "00:00";
-  }
+  if (strlen($issue_data["time_end"]) < 1) $issue_data["time_end"] = "00:00";
 
   // Translate the datetime input to unix
   $issue_data["ends"] = strtotime($issue_data["date_end"] . " " . $issue_data["time_end"] . ":00");
 
-  // We must now handle options
   // By default, all options will have a colour set from the select, so we must exclude any that don't have a name
   foreach ($issue_data["options"] as $entry) {
-    if (strlen($entry["text"]) > 0) {
-      $issue_data["c_options"] = $entry;
-    }
+    if (strlen($entry["text"]) > 0) $issue_data["c_options"] = $entry;
   }
 
   // We presume all is well at this point.
@@ -40,14 +30,12 @@ function new_issue($pdo, $issue_data) {
                  $issue_data["context"],                // context TEXT
                  json_encode($issue_data["c_options"]), // options JSON
                  $issue_data["ends"],                   // ends INTEGER
-                 0,                                     // result INTEGER (-1: awaiting resolution, 0: on-going, 1: finished)
-                 "",                                    // resolution TEXT (what admin writes to describe the outcome)
-                );
+                 0,                                     // result INTEGER (0: on-going, 1: awaiting resolution, 2: finished)
+                 "",);                                  // resolution TEXT (what admin writes to describe the outcome)
 
   $order = $pdo->prepare("INSERT INTO topics ('id', 'cat', 'question', 'context', 'options', 'ends', 'result', 'resolution')
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
   $order->execute($issue);
-
   return 0;
 }
 
@@ -60,12 +48,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_POST["suggestion"])) {
 
       foreach ($_POST["suggestion"] as $checked) {
-
         $statement = "DELETE FROM ideas WHERE id= (?)";
         $order = $pdo->prepare($statement);
         $order->execute([$checked]);
-
       }
+
       // Send back a success response with how many rows were removed
       $status = 1;
       $snacks = "<div class=\"notification is-info\" id=\"snacks\">Successfully obliterated <code>" .
