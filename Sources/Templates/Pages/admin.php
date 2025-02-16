@@ -30,7 +30,7 @@ function new_issue($pdo, $issue_data) {
                  $issue_data["context"],                // context TEXT
                  json_encode($issue_data["c_options"]), // options JSON
                  $issue_data["ends"],                   // ends INTEGER
-                 0,                                     // result INTEGER (0: on-going, 1: awaiting resolution, 2: finished)
+                 0,                                     // result INTEGER (0: current, 1: pending, 2: finished)
                  "",);                                  // resolution TEXT (what admin writes to describe the outcome)
 
   $order = $pdo->prepare("INSERT INTO topics ('id', 'cat', 'question', 'context', 'options', 'ends', 'result', 'resolution')
@@ -142,9 +142,6 @@ foreach ($pdo->query($query) as $idea) {
     <button class="button is-link js-modal-trigger is-pulled-right" data-target="js-modal">New Issue</button>
     <h1 class="title is-4">Active Issues</h1>
 
-    <!-- Issue-Creator Modal -->
-    <?php include $parts . "creator.php"; ?>
-
     <!-- cat TEXT, question TEXT, context TEXT, options JSON, ends INTEGER, result INTEGER, resolution TEXT -->
 
   </div>
@@ -153,7 +150,7 @@ foreach ($pdo->query($query) as $idea) {
   <div class="notification">
     <h1 class="title is-4">Suggestions from Operators</h1>
 
-    <form name="suggestions" method="POST">
+    <form method="POST">
       <div class="table-wrapper">
         <table class="table is-fullwidth has-text-centered">
           <thead>
@@ -208,6 +205,9 @@ foreach ($pdo->query($query) as $idea) {
 <?php include $parts . "footer.php"; ?>
 
 </div>
+
+<!-- Issue-Creator Modal -->
+<?php include $parts . "creator.php"; ?>
 
 <?=$snacks?>
 
