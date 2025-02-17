@@ -5,10 +5,15 @@
         <img height="48" width="48" src="/Static/Assets/icon.svg" alt="CalRef Logo" aria-label="Visit Calamity Refuge">
         <span class="depth mslim">CalRef</span>
       </a>
-      <a class="mobile navbar-item depth" href="/">Main</a>
-      <a class="mobile navbar-item depth" href="/bids">Bids</a>
-      <a class="mobile navbar-item depth" href="/bids">Old</a>
-      <a class="mobile navbar-item depth" href="/bids">Suggest</a>
+      <a class="mobile navbar-item px-2 depth" href="/">Main</a>
+
+      <?php if ($context["user"]["is_admin"]): ?>
+        <a class="mobile navbar-item px-2 depth" href="/admin">Admin</a>
+      <?php endif; ?>
+
+      <a class="mobile navbar-item px-2 depth" href="/bids">Bids</a>
+      <a class="mobile navbar-item px-2 depth" href="/archives">Old</a>
+      <a class="mobile navbar-item px-2 depth" href="/suggest">Idea</a>
     </div>
 
     <div class="navbar-menu">
