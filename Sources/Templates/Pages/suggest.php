@@ -1,5 +1,16 @@
 <?php
 
+/*
+*
+* Popcorn: Lofi Bets to Chill and Watch the World Burn to
+* Copyright 2025 Luca McGrath, MIT License
+* https://github.com/Lucabaduka/Popcorn
+*
+* This page handles taking suggestions from operators for new
+* bets and commits them to the database.
+*
+*/
+
 // We have probably received a suggestion post
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 

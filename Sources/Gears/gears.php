@@ -6,7 +6,10 @@
 * Copyright 2025 Luca McGrath, MIT License
 * https://github.com/Lucabaduka/Popcorn
 *
-* This file contains all the functions and objects used by Tart in other areas
+* This is the general class and function "brains" storage.
+*
+* Here we can keep anything that's used by multiple php files or
+* things that index needs to handle in routine or fallback work.
 *
 */
 

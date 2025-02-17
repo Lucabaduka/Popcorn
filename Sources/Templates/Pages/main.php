@@ -1,5 +1,18 @@
 <?php
 
+/*
+*
+* Popcorn: Lofi Bets to Chill and Watch the World Burn to
+* Copyright 2025 Luca McGrath, MIT License
+* https://github.com/Lucabaduka/Popcorn
+*
+* This is the main issue overview, showing everything that an
+* operator can bid on, and handling filtering for narrowing
+* that list down.
+*
+* It is the launch point for lodging bids via bid.php
+*
+*/
 
 // Needs a case statement
 $filter = "ends ASC";

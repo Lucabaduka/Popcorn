@@ -1,5 +1,21 @@
 <?php
 
+/*
+*
+* Popcorn: Lofi Bets to Chill and Watch the World Burn to
+* Copyright 2025 Luca McGrath, MIT License
+* https://github.com/Lucabaduka/Popcorn
+*
+* As might be obvious, this index file primarily handles all the
+* routing that we'll need to interact with the site. Additionally,
+* it is here that we establish variable shorthands for pages,
+* parts, scripts, and universally needed variables like $op.
+*
+* We load the gears and forum SSI files here, but all other
+* processing should take place in more specific php files.
+*
+*/
+
 $version = "0.1.0";
 
 // Testing
@@ -23,7 +39,6 @@ $scripts = "/Static/Scripts/";
 // but we will prepare to change that if necessary.
 $status = 0;
 $snacks = "";
-
 $op = get_operator($pdo, $context);
 
 // Handle the routing to our blessed site
@@ -43,8 +58,12 @@ switch ($request) {
       include $parts . "403.php";
     }
     break;
+
   case "/bets":
     include $pages . "bets.php";
+    break;
+  case "/bid":
+    include $pages . "bid.php";
     break;
   case "/archives":
     include $pages . "archives.php";
