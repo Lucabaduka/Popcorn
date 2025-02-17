@@ -23,7 +23,7 @@
               <select name="new_issue[category]">
                 <option value="admin">🟣 Administrative</option>
                 <option value="conflict">🔴 Conflict</option>
-                <option value="economy">🟢 Economics</option>
+                <option value="economics">🟢 Economics</option>
                 <option value="sports">🟡 Sports</option>
                 <option value="sapphire">🔵 Sapphire</option>
               </select>

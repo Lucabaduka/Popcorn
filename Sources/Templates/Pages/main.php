@@ -1,5 +1,32 @@
 <?php
 
+
+// Needs a case statement
+$filter = "ends ASC";
+
+// Load all current issues and committ them to category arrays
+$all_issues = array("admin" => array(), "conflict" => array(), "economics" => array(), "spots" => array(), "sapphire" => array());
+$query =  "SELECT * FROM topics WHERE result < 2 ORDER BY $filter;";
+foreach ($pdo->query($query) as $issue) {
+  switch ($issue["cat"]) {
+    case "admin":
+      $all_issues["admin"][count($all_issues["admin"])] = $issue;
+      break;
+    case "conflict":
+      $all_issues["conflict"][count($all_issues["conflict"])] = $issue;
+      break;
+    case "economics":
+      $all_issues["economics"][count($all_issues["economics"])] = $issue;
+      break;
+    case "sports":
+      $all_issues["sports"][count($all_issues["sports"])] = $issue;
+      break;
+    case "sapphire":
+      $all_issues["sapphire"][count($all_issues["sapphire"])] = $issue;
+      break;
+  }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -38,6 +65,18 @@
           Explore the bets below and wager what you think will happen in this unfathomably unstable world.
         </p>
       </div>
+
+      <!-- Current Operator Balance and Max -->
+      <article class="message is-info">
+        <div class="message-body py-4">
+          <div class="is-flex center-align" style="flex-wrap: wrap;">
+            <p class="mx-2"><strong>Balance:</strong> <code><?=number_format($op["bal"])?></code></p>
+            <p class="mx-2"><strong>Staked:</strong> <code><?=number_format($op["staked"])?></code></p>
+            <p class="mx-2"><strong>Max Bet:</strong> <code><?=number_format($op["max"])?></code></p>
+          </div>
+        </div>
+      </article>
+
     </div>
 
     <div class="is-flex mb-2 center-align">
@@ -49,7 +88,9 @@
           <button class="button filter is-small">🔴 Conflict</button>
           <button class="button filter is-small">🟢 Economics</button>
           <button class="button filter is-small">🟡 Sports</button>
-          <button class="button filter is-small">🔵 Sapphire</button>
+          <?php if (count($all_issues["sapphire"]) > 0) : ?>
+            <button class="button filter is-small">🔵 Sapphire</button>
+          <?php endif; ?>
         </div>
       </fieldset>
 
@@ -67,159 +108,93 @@
 
   </div>
 
-  <div style="clear:both;"></div>
+  <?php foreach (array_keys($all_issues) as $key): ?>
+    <?php if (count($all_issues[$key]) > 0): ?>
 
-  <article class="message overview mslim is-info">
-        <div class="message-body p-2">
-
-        <div class="fixed-grid">
-          <div class="grid mb-0">
-            <div class="cell">
-              <strong>Balance:</strong>
-            </div>
-            <div class="cell">
-              <code><?=number_format($op["bal"])?></code>
-            </div>
-
-            <div class="cell">
-              <strong>Staked:</strong>
-            </div>
-            <div class="cell">
-              <code><?=number_format($op["staked"])?></code>
-            </div>
-
-            <div class="cell">
-              <strong>Max Bet:</strong>
-            </div>
-            <div class="cell">
-              <code><?=number_format($op["max"])?></code>
-            </div>
-          </div>
-          <div>
-
-        </div>
-      </article>
-
-      <article class="message mobile is-info">
-        <div class="message-body p-2 py-4">
-
-          <div class="is-flex" style="flex-wrap:wrap;">
-            <div class="cell my-1 mx-2">
-              <strong>Balance:</strong> <code><?=number_format($op["bal"])?></code>
-            </div>
-
-            <div class="cell my-1 mx-2">
-              <strong>Staked:</strong> <code><?=number_format($op["staked"])?></code>
-            </div>
-
-            <div class="cell my-1 mx-2">
-              <strong>Max Bet:</strong> <code><?=number_format($op["max"])?></code>
-            </div>
-          </div>
-
-        </div>
-      </article>
-
-  <section class="section">
-    <div class="container">
-      <div class="title admin has-text-weight-light depth">
-        Administrative
-      </div>
-    </div>
-  </section>
-
-  <div class="columns is-multiline mx-4">
-
-    <div class="column is-one-third">
-
-      <!-- Issue Title/Header -->
-      <div class="card mx-2 mb-4 admin">
-        <header class="card-header">
-          <p class="card-header-title is-size-5">Next Prime Minister of Canada</p>
-          <div class="icon card-header-icon">
-            <span class="tag slap is-success">Bet in Place</span>
-          </div>
-        </header>
-
-        <!-- Issue Context -->
-        <div class="card-content">
-          Canada will be holding a federal election to determine the country's leadership sometime this year. Upon its conclusion,
-          who will become the next Prime Minister of Canada?
-        </div>
-
-        <!-- Current Odds Ratio -->
-        <div class="columns is-multiline mb-1">
-          <div class="column is-one-half">
-            <fieldset class="odds">
-              <legend class="is-size-7">Current Odds</legend>
-              <code>7</code> : <code>3</code> : <code>1</code>
-            </fieldset>
-          </div>
-
-          <!-- Ending Time -->
-          <div class="column is-one-half">
-            <fieldset class="odds">
-              <legend class="is-size-7">Ends</legend>
-              <code><time class="local-time" data-epoch="1736848799">14 January 2025 at 01:59</time></code>
-            </fieldset>
+      <!-- <?=ucwords($key)?> Title Block -->
+      <section class="section">
+        <div class="container">
+          <div class="title <?=$key?> has-text-weight-light depth">
+            <?php $title = $key === "admin" ? "Administration" : ucwords($key); echo $title; ?>
           </div>
         </div>
+      </section>
 
-        <!-- Betting Options -->
-        <footer class="card-footer">
+      <!-- <?=ucwords($key)?> Issue Cards -->
+      <div class="columns is-multiline mx-4">
 
-          <a href="#" class="is-block has-text-centered card-footer-item p-0">
-            <div class="odds" style="background:FireBrick; height: 20px; width:64%"></div>
-            <p class="">Mark Carney</p>
-          </a>
+      <?php foreach ($all_issues[$key] as $issue): $options = json_decode($issue["options"], True);?>
 
-          <a href="#" class="is-block has-text-centered card-footer-item p-0">
-            <div class="odds" style="background:DodgerBlue; height: 20px; width:27%"></div>
-            <p class="">Pierre Poilievre</p>
-          </a>
+        <div class="column is-one-third">
 
-          <a href="#" class="is-block has-text-centered card-footer-item p-0">
-            <div class="odds" style="background:GoldenRod; height: 20px; width:9%"></div>
-            <p class="">Jagmeet Singh</p>
-          </a>
+          <!-- Issue Title/Header -->
+          <div class="card mx-2 mb-4 <?=$key?>">
+            <header class="card-header mflex">
+              <p class="id-fader"><?=$issue["id"]?></p>
+              <p class="card-header-title mslim is-size-5"><?=$issue["question"]?></p>
 
-        </footer>
+              <div class="is-flex">
+                <fieldset class="odds p-0">
+                  <legend class="is-size-7">Betting Pool</legend>
+                  <code class="has-text-warning">0</code>
+                </fieldset>
+                <fieldset class="odds p-0">
+                  <legend class="is-size-7">Your Bet</legend>
+                  <code class="has-text-info">0</code>
+                </fieldset>
+
+                <div class="icon card-header-icon pl-5">
+                  <span class="tag slap is-info">Bet in Place</span>
+                </div>
+              </div>
+
+              <p class="card-header-title is-size-5 mobile"><?=$issue["question"]?></p>
+            </header>
+
+            <!-- Issue Context -->
+            <div class="card-content">
+              <?=$issue["context"]?>
+            </div>
+
+            <!-- Current Odds Ratio -->
+            <div class="columns is-multiline mb-0">
+              <div class="column is-one-half">
+                <fieldset class="odds">
+                  <legend class="is-size-7">Current Odds</legend>
+                  <code>0</code> : <code>0</code> : <code>0</code>
+                </fieldset>
+              </div>
+
+              <!-- Ending Time -->
+              <div class="column is-one-half">
+                <fieldset class="odds">
+                  <legend class="is-size-7">Ends</legend>
+                  <code><time class="local-time" data-epoch="1736848799"><?=date("M j Y \a\\t H:i", $issue["ends"])?></time></code>
+                </fieldset>
+              </div>
+            </div>
+
+            <!-- Betting Options -->
+            <footer class="card-footer">
+
+              <?php foreach ($options as $option): ?>
+
+                <a href="#" class="is-block has-text-centered card-footer-item p-0">
+                  <div class="odds" style="background:<?=$option["colour"]?>; height: 20px; width:64%"></div>
+                  <p><?=$option["text"]?></p>
+                </a>
+
+              <?php endforeach; ?>
+
+            </footer>
+          </div>
+
+        </div>
+
+      <?php endforeach; ?>
       </div>
-
-    </div>
-  </div>
-
-  <section class="section">
-    <div class="container">
-      <div class="title conflict has-text-weight-light depth">
-        Conflict
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="title economics has-text-weight-light depth">
-        Economics
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="title sports has-text-weight-light depth">
-        Sports
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="title sapphire has-text-weight-light depth">
-        Sapphire
-      </div>
-    </div>
-  </section>
+    <?php endif; ?>
+  <?php endforeach; ?>
 
   <!-- Footer -->
   <?php include $parts . "footer.php"; ?>

@@ -67,6 +67,9 @@ fieldset {
 .card-header-icon {
   cursor: default;
 }
+.card-header-title {
+  z-index: 2;
+}
 .hero-body {
   justify-content: center;
 }
@@ -150,6 +153,31 @@ fieldset {
 .sapphire .card-header {
   background: linear-gradient(170deg, #0087ff -100% , transparent);
 }
+
+.id-fader {
+  position: absolute;
+  font-size: 4em;
+  top: -23px;
+  z-index: 1;
+  font-weight: bold;
+  left: 2px;
+}
+.admin .id-fader {
+  color: #591a62;
+}
+.conflict .id-fader {
+  color: #591010;
+}
+.economics .id-fader {
+  color: #239a0b21;
+}
+.sports .id-fader {
+  color: #c1b20d36;
+}
+.sapphire .id-fader {
+  color: #09A8D92E;
+}
+
 .title.admin, .title.conflict, .title.economics, .title.sports, .title.sapphire {
   max-width: 750px;
   padding: 6px;
