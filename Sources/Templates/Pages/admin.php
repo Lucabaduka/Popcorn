@@ -1,5 +1,12 @@
 <?php
 
+// List of approved CSS name brands for graph options
+$blues_lib   = ["CornflowerBlue", "DarkSlateBlue", "RoyalBlue", "DodgerBlue",    "LightSeaGreen"];
+$reds_lib    = ["Crimson",        "DarkMagenta",   "FireBrick", "Maroon",        "MediumVioletRed"];
+$greens_lib  = ["DarkGreen",      "ForestGreen",   "Green",     "MediumSeaGreen","SeaGreen"];
+$yellows_lib = ["GoldenRod",      "Gold",          "Yellow",    "Khaki",         "PaleGoldenRod"];
+$purples_lib = ["MediumPurple",   "BlueViolet",    "Indigo",    "DarkViolet",    "RebeccaPurple"];
+
 // Function to take form data from the admin page and insert a new issue to the database
 // Called when the issue modal closes via the submit button
 // Returns a 0 on success or a 1 on failure
@@ -185,7 +192,13 @@ foreach ($pdo->query($query) as $issue) {
 
           <td><?=date("Y-m-d H:i:s ", $issue["ends"])?></td>
           <td><?php $status = $issue["result"] === 0 ? "Current" : "Pending"; echo $status;?></td>
-          <td><?=$issue["resolution"]?></td>
+          <td>
+            <form method="POST" action="/resolve">
+              <input type="hidden" name="resolve_issue" value="<?=$issue["id"]?>"/>
+              <button class="edit">🛠️</button>
+            </form>
+
+          </td>
         </tr>
 
       <?php endforeach; ?>

@@ -37,7 +37,7 @@ function db_build($dbname) {
 }
 
 // A function to retrieve the operator's profile
-// Called whenever any page on Popcorn is loaded
+// Always called when a page is loaded
 // Returns an array of the Operators table based on ID
 function get_operator ($pdo, $context) {
 
@@ -96,14 +96,11 @@ function __gcd($a, $b)
 
 }
 
-$blues_lib   = ["CornflowerBlue", "DarkSlateBlue", "RoyalBlue", "DodgerBlue",    "LightSeaGreen"];
-$reds_lib    = ["Crimson",        "DarkMagenta",   "FireBrick", "Maroon",        "MediumVioletRed"];
-$greens_lib  = ["DarkGreen",      "ForestGreen",   "Green",     "MediumSeaGreen","SeaGreen"];
-$yellows_lib = ["GoldenRod",      "Gold",          "Yellow",    "Khaki",         "PaleGoldenRod"];
-$purples_lib = ["MediumPurple",   "BlueViolet",    "Indigo",    "DarkViolet",    "RebeccaPurple"];
-
+// A function to produce an "s" if a supplied array has multiple items or an empty string if it's not
+// Expected to be called anywhere
+// Returns a grammar-correct string to be concatinated to any other string
 function pluralise ($array) {
-  if ($array != 1 and $array != -1) {
+  if ($array != 1) {
     return "s";
   } else {
     return "";

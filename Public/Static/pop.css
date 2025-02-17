@@ -93,6 +93,16 @@ fieldset {
 .depth {
   filter: drop-shadow(3px 3px 2px #0000004f);
 }
+.edit {
+  font-size: 1.6em;
+  border: 1px solid #cbcbcb4a;
+  border-radius: 4px;
+  padding-left: 6px;
+  padding-right: 8px;
+}
+.edit:hover {
+  background: #1b223f;
+}
 .foot-content {
   display: flex;
   align-items: center;
