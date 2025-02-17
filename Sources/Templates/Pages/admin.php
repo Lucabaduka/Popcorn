@@ -1,5 +1,18 @@
 <?php
 
+/*
+*
+* Popcorn: Lofi Bets to Chill and Watch the World Burn to
+* Copyright 2025 Luca McGrath, MIT License
+* https://github.com/Lucabaduka/Popcorn
+*
+* This page is intended to handle an admin overview of receiving
+* bet suggestions and creating new issues to vote on.
+*
+* It is the launch point for editing and resolving bids via resolve.php
+*
+*/
+
 // List of approved CSS name brands for graph options
 $blues_lib   = ["CornflowerBlue", "DarkSlateBlue", "RoyalBlue", "DodgerBlue",    "LightSeaGreen"];
 $reds_lib    = ["Crimson",        "DarkMagenta",   "FireBrick", "Maroon",        "MediumVioletRed"];
@@ -95,7 +108,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   }
 }
 
-
 // Collect all suggestions and commit them to an array
 $x = 0;
 $ideas = array();
@@ -113,6 +125,7 @@ foreach ($pdo->query($query) as $issue) {
   $issues[$x] = $issue;
   $x++;
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -270,17 +283,130 @@ foreach ($pdo->query($query) as $issue) {
 </div>
 
 <!-- Issue-Creator Modal -->
-<?php include $parts . "creator.php"; ?>
+<div id="js-modal" class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+
+    <header class="modal-card-head">
+      <p class="modal-card-title">Create a New Issue</p>
+      <button class="is-large delete" aria-label="close"></button>
+    </header>
+
+    <form method="POST">
+      <section class="modal-card-body">
+
+      <div class="field is-horizontal">
+        <div class="field-label is-normal">
+          <label class="label" for="question">Question</label>
+        </div>
+        <div class="field-body">
+          <div class="field">
+            <input class="input is-info" name="new_issue[question]" type="text">
+          </div>
+          <div class="field">
+            <div class="select is-info">
+              <select name="new_issue[category]">
+                <option value="admin">🟣 Administrative</option>
+                <option value="conflict">🔴 Conflict</option>
+                <option value="economics">🟢 Economics</option>
+                <option value="sports">🟡 Sports</option>
+                <option value="sapphire">🔵 Sapphire</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field is-horizontal">
+        <div class="field-label is-normal">
+          <label class="label">Context</label>
+        </div>
+        <div class="field-body">
+          <div class="field">
+            <textarea name="new_issue[context]" class="textarea is-info" placeholder="Explain more about the context and premise of the question."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <?php for($i = 0; $i < 5; ++$i): ?>
+
+        <div class="field is-horizontal" id="theme_<?=($i+1)?>">
+          <div class="field-label is-normal">
+            <label class="label" for="new_issue[options][<?=($i)?>][text]">Option <?=($i+1)?></label>
+          </div>
+
+          <div class="field-body">
+            <div class="field">
+              <input class="input is-info" name="new_issue[options][<?=($i)?>][text]" type="text">
+            </div>
+            <div class="field">
+              <div name="category" class="select is-info">
+                <select id="selector_<?=($i+1)?>" name="new_issue[options][<?=($i)?>][colour]">
+
+                  <optgroup label="Blue Themes">
+                    <?php foreach ($blues_lib as $colour): ?>
+                      <option value="<?=$colour?>"><?=$colour?></option>
+                    <?php endforeach; ?>
+                  </optgroup>
+
+                  <optgroup label="Red Themes">
+                    <?php foreach ($reds_lib as $colour): ?>
+                      <option value="<?=$colour?>"><?=$colour?></option>
+                    <?php endforeach; ?>
+                  </optgroup>
+
+                  <optgroup label="Green Themes">
+                    <?php foreach ($greens_lib as $colour): ?>
+                      <option value="<?=$colour?>"><?=$colour?></option>
+                    <?php endforeach; ?>
+                  </optgroup>
+
+                  <optgroup label="Yellow Themes">
+                    <?php foreach ($yellows_lib as $colour): ?>
+                      <option value="<?=$colour?>"><?=$colour?></option>
+                    <?php endforeach; ?>
+                  </optgroup>
+
+                  <optgroup label="Purple Themes">
+                    <?php foreach ($purples_lib as $colour): ?>
+                      <option value="<?=$colour?>"><?=$colour?></option>
+                    <?php endforeach; ?>
+                  </optgroup>
+
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <?php endfor; ?>
+
+      <div class="field is-horizontal">
+        <div class="field-label is-normal">
+          <label class="label" for="new_issue[date_end]">Betting Ends</label>
+        </div>
+        <div class="field-body">
+          <div class="field">
+            <input type="date" name="new_issue[date_end]" value="<?=date("Y-m-d", time())?>" min="<?=date("Y-m-d", time())?>"/>
+            <input type="time" name="new_issue[time_end]"/>
+          </div>
+        </div>
+      </div>
+
+      </section>
+      <footer class="modal-card-foot">
+        <div class="buttons">
+          <input type="submit" value="Send it" class="button is-success">
+        </div>
+      </footer>
+    </form>
+  </div>
+</div>
 
 <?=$snacks?>
 
 <script src="/Static/pop.js"></script>
 <script src="/Static/admin.js"></script>
-<script>
-
-
-
-</script>
 
 </body>
 </html>
