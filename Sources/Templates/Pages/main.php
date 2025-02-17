@@ -51,7 +51,7 @@ foreach ($pdo->query($query) as $issue) {
   <!-- Menu Panel -->
   <?php include $parts . "menu.php"; ?>
 
-  <div class="container mclear py-4 is-max-desktop">
+  <div class="container mclear py-4">
 
     <div class="notification">
       <div class="tags mb-0 has-addons is-pulled-right">
@@ -112,7 +112,7 @@ foreach ($pdo->query($query) as $issue) {
     <?php if (count($all_issues[$key]) > 0): ?>
 
       <!-- <?=ucwords($key)?> Title Block -->
-      <section class="section">
+      <section class="section pt-2">
         <div class="container">
           <div class="title <?=$key?> has-text-weight-light depth">
             <?php $title = $key === "admin" ? "Administration" : ucwords($key); echo $title; ?>
@@ -144,7 +144,7 @@ foreach ($pdo->query($query) as $issue) {
                 </fieldset>
 
                 <div class="icon card-header-icon pl-5">
-                  <span class="tag slap is-info">Bet in Place</span>
+                  <span class="tag slap is-warning">Bet Available</span>
                 </div>
               </div>
 
@@ -175,18 +175,21 @@ foreach ($pdo->query($query) as $issue) {
             </div>
 
             <!-- Betting Options -->
-            <footer class="card-footer">
+            <form method="POST" action="/bid">
+              <footer class="card-footer">
+                <input type="hidden" name="bid_request" value="<?=$issue["id"]?>"/>
 
-              <?php foreach ($options as $option): ?>
+                <?php foreach ($options as $option): ?>
 
-                <a href="#" class="is-block has-text-centered card-footer-item p-0">
-                  <div class="odds" style="background:<?=$option["colour"]?>; height: 20px; width:64%"></div>
-                  <p><?=$option["text"]?></p>
-                </a>
+                  <button class="is-block has-text-centered card-footer-item p-0">
+                    <div class="odds" style="background:<?=$option["colour"]?>; height: 20px; width:64%"></div>
+                    <p><?=$option["text"]?></p>
+                  </button>
 
-              <?php endforeach; ?>
+                <?php endforeach; ?>
 
-            </footer>
+              </footer>
+            </form>
           </div>
 
         </div>
