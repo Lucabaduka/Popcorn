@@ -54,6 +54,36 @@ fieldset {
 
 /* Bulma Generic Overrides */
 
+.bid-option {
+  display: block;
+  padding: 20px;
+  border: 1px solid;
+  margin: 10px;
+  border-radius: 8px;
+  color: #FFF;
+  -moz-transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
+}
+.bid-option:has(:checked) {
+  font-weight:bold;
+}
+.admin .bid-option                   {background: #120b15; border-color: #591A62;}
+.admin .bid-option:has(:checked)     {background: #1f022c; border-color: #F700FF;}
+.conflict .bid-option                {background: #150b0b; border-color: #621A1A;}
+.conflict .bid-option:has(:checked)  {background: #2c0202; border-color: #F00;}
+.economics .bid-option               {background: #0b150b; border-color: #26621A;}
+.economics .bid-option:has(:checked) {background: #0d2c02; border-color: #2CFF00;}
+.sports .bid-option                  {background: #15130b; border-color: #62571A;}
+.sports .bid-option:has(:checked)    {background: #2c2202; border-color: #FFA700;}
+.sapphire .bid-option                {background: #0b1115; border-color: #1A4A62;}
+.sapphire .bid-option:has(:checked)  {background: #02122c; border-color: #0064FF;}
+
+.bid-option:hover:not(:has([disabled])) {
+  border-color: #FFEB9E;
+}
+
 .card {
   border: 1px solid transparent;
 }
@@ -76,6 +106,12 @@ fieldset {
   width: fit-content;
   position: absolute;
   top: 100px;
+}
+.progress {
+  background: transparent;
+}
+.table.plain td, .table.plain th {
+  border: none;
 }
 
 /* Custom Styles */
@@ -110,6 +146,10 @@ fieldset {
 .glow {
   filter: drop-shadow(1px 1px 5px #c4c4c4db);
 }
+.graph {
+  position: relative;
+  height: 20px;
+}
 .odds {
   margin: 0 auto;
   text-align: center;
@@ -127,38 +167,17 @@ fieldset {
 
 /* Card hell */
 
-.card.admin {
-  border-color: #8e0891a3;
-}
-.card.conflict {
-  border-color: #910808a3;
-}
-.card.economics {
-  border-color: #025b0ca3;
-}
-.card.sports {
-  border-color: #7f630fa3;
-}
-.card.sapphire {
-  border-color: #0087ffa3;
-  filter: drop-shadow(1px 1px 5px #c4c4c4db);
-}
+.card.admin     {border-color: #8e0891a3;}
+.card.conflict  {border-color: #910808a3;}
+.card.economics {border-color: #025b0ca3;}
+.card.sports    {border-color: #7f630fa3;}
+.card.sapphire  {border-color: #0087ffa3; filter: drop-shadow(1px 1px 5px #c4c4c4db);}
 
-.admin .card-header {
-  background: linear-gradient(170deg, #8e0891 -100% , transparent);
-}
-.conflict .card-header {
-  background: linear-gradient(170deg, #910808 -100% , transparent);
-}
-.economics .card-header {
-  background: linear-gradient(170deg, #025b0c -100% , transparent);
-}
-.sports .card-header {
-  background: linear-gradient(170deg, #ffbf00 -100% , transparent);
-}
-.sapphire .card-header {
-  background: linear-gradient(170deg, #0087ff -100% , transparent);
-}
+.admin .card-header     {background: linear-gradient(170deg, #8e0891 -100%, transparent);}
+.conflict .card-header  {background: linear-gradient(170deg, #910808 -100%, transparent);}
+.economics .card-header {background: linear-gradient(170deg, #025b0c -100%, transparent);}
+.sports .card-header    {background: linear-gradient(170deg, #ffbf00 -100%, transparent);}
+.sapphire .card-header  {background: linear-gradient(170deg, #0087ff -100%, transparent);}
 
 .id-fader {
   position: absolute;
@@ -168,47 +187,27 @@ fieldset {
   font-weight: bold;
   left: 2px;
 }
-.admin .id-fader {
-  color: #591a62;
+.bid .id-fader {
+  right: 2px;
+  left: unset;
 }
-.conflict .id-fader {
-  color: #591010;
-}
-.economics .id-fader {
-  color: #239a0b21;
-}
-.sports .id-fader {
-  color: #c1b20d36;
-}
-.sapphire .id-fader {
-  color: #09A8D92E;
-}
+.admin .id-fader     {color: #591a62;}
+.conflict .id-fader  {color: #591010;}
+.economics .id-fader {color: #239a0b21;}
+.sports .id-fader    {color: #c1b20d36;}
+.sapphire .id-fader  {color: #09A8D92E;}
 
 .title.admin, .title.conflict, .title.economics, .title.sports, .title.sapphire {
   max-width: 750px;
   padding: 6px;
   border-radius: 4px 0 0px 4px;
+  border-left: 3px solid;
 }
-.title.admin {
-  background: linear-gradient(to right, transparent -25%, #59025b, transparent);
-  border-left: 3px solid #59025b;
-}
-.title.conflict {
-  background: linear-gradient(to right, transparent -25%, #5b0202, transparent);
-  border-left: 3px solid #5b0202;
-}
-.title.economics {
-  background: linear-gradient(to right, transparent -25%, #025b0c, transparent);
-  border-left: 3px solid #025b0c;
-}
-.title.sports {
-  background: linear-gradient(to right, transparent -25%, #937c00, transparent);
-  border-left: 3px solid #937c00;
-}
-.title.sapphire {
-  background: linear-gradient(to right, transparent -25%, #0062b9, transparent);
-  border-left: 3px solid #0062b9;
-}
+.title.admin     {background: linear-gradient(to right, transparent -25%, #59025b, transparent); border-color: #59025b;}
+.title.conflict  {background: linear-gradient(to right, transparent -25%, #5b0202, transparent); border-color: #5b0202;}
+.title.economics {background: linear-gradient(to right, transparent -25%, #025b0c, transparent); border-color: #025b0c;}
+.title.sports    {background: linear-gradient(to right, transparent -25%, #937c00, transparent); border-color: #937c00;}
+.title.sapphire  {background: linear-gradient(to right, transparent -25%, #0062b9, transparent); border-color: #0062b9;}
 
 /* Icons */
 
