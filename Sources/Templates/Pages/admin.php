@@ -197,7 +197,7 @@ foreach ($pdo->query($query) as $issue) {
                 echo $option["text"];
                 $count++;
                 if ($count < count($issue["options"])) {
-                  echo ", ";
+                  echo " | ";
                 }
               }
             ?>

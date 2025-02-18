@@ -19,7 +19,7 @@ $filter = "ends ASC";
 
 // Load all current issues and committ them to category arrays
 $all_issues = array("admin" => array(), "conflict" => array(), "economics" => array(), "spots" => array(), "sapphire" => array());
-$query =  "SELECT * FROM topics WHERE result < 2 ORDER BY $filter;";
+$query =  "SELECT * FROM topics WHERE result < 1 ORDER BY $filter;";
 foreach ($pdo->query($query) as $issue) {
   switch ($issue["cat"]) {
     case "admin":

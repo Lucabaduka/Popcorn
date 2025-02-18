@@ -62,9 +62,16 @@ switch ($request) {
   case "/bets":
     include $pages . "bets.php";
     break;
+
+  // Run a basic check that they're not navigating here manually
   case "/bid":
-    include $pages . "bid.php";
+    if (isset($_POST["bid_request"]) || (isset($_POST["bid"]) && isset($_POST["bid_request"]))) {
+      include $pages . "bid.php";
+    } else {
+      include $pages . "main.php";
+    }
     break;
+
   case "/archives":
     include $pages . "archives.php";
     break;
