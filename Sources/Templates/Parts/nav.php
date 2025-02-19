@@ -11,9 +11,8 @@
         <a class="mobile navbar-item px-2 depth" href="/admin">Admin</a>
       <?php endif; ?>
 
-      <a class="mobile navbar-item px-2 depth" href="/bids">Bids</a>
-      <a class="mobile navbar-item px-2 depth" href="/archives">Old</a>
-      <a class="mobile navbar-item px-2 depth" href="/suggest">Idea</a>
+      <a class="mobile navbar-item px-2 depth" href="/records">Records</a>
+      <a class="mobile navbar-item px-2 depth" href="/suggest">Ideas</a>
     </div>
 
     <div class="navbar-menu">
