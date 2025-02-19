@@ -153,6 +153,7 @@ fieldset {
 .odds {
   margin: 0 auto;
   text-align: center;
+  width: max-content;
 }
 .overview {
   width: 200px;

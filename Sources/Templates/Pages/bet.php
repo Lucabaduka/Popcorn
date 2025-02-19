@@ -91,8 +91,9 @@ foreach ($bets as $bet) {
   $pool += $bet["volume"];
   if (!array_key_exists($tally[$bet["opinion"]], $tally)) {
     $tally[$bet["opinion"]] = 1;
+  } else {
+    $tally[$bet["opinion"]] += 1;
   }
-  $tally[$bet["opinion"]] += 1;
 
   // We'll also take the opportunity to see if they've bet before.
   if ($bet["operator"] === $op["id"]) {

@@ -136,7 +136,42 @@ foreach ($pdo->query($query) as $issue) {
       <!-- <?=ucwords($key)?> Issue Cards -->
       <div class="columns is-multiline mx-4">
 
-      <?php foreach ($all_issues[$key] as $issue): $options = json_decode($issue["options"], True);?>
+      <?php foreach ($all_issues[$key] as $issue):
+
+        $options      = json_decode($issue["options"], True);
+        $issue_id     = $issue["id"];
+        $eligible     = True;
+        $operator_bet = "None";
+
+        // Load any existing bids and commit them to an array
+        $x = 0;
+        $bets = array();
+        $query =  "SELECT * FROM bets WHERE topic = $issue_id";
+        foreach ($pdo->query($query) as $bet) {
+          $bets[$x] = $bet;
+          $x++;
+        }
+        if (!$bets) {
+          $bets = array();
+        }
+        $pool = 0;
+        $tally = array();
+        foreach ($bets as $bet) {
+          $pool += $bet["volume"];
+          if (!array_key_exists($tally[$bet["opinion"]], $tally)) {
+            $tally[$bet["opinion"]] = 1;
+          } else {
+            $tally[$bet["opinion"]] += 1;
+          }
+
+          // We'll also take the opportunity to see if they've bet before.
+          if ($bet["operator"] === $op["id"]) {
+            $eligible = False;
+            $operator_bet = number_format($bet["volume"]);
+          }
+        }
+
+      ?>
 
         <div class="column is-one-third">
 
@@ -149,15 +184,26 @@ foreach ($pdo->query($query) as $issue) {
               <div class="is-flex">
                 <fieldset class="odds p-0">
                   <legend class="is-size-7">Betting Pool</legend>
-                  <code class="has-text-warning">0</code>
+                  <code class="has-text-warning"><?=number_format($pool+(count($options)*1000))?></code>
                 </fieldset>
                 <fieldset class="odds p-0">
                   <legend class="is-size-7">Your Bet</legend>
-                  <code class="has-text-info">0</code>
+                  <code class="has-text-info"><?=$operator_bet?></code>
                 </fieldset>
 
                 <div class="icon card-header-icon pl-5">
-                  <span class="tag slap is-warning">Bet Available</span>
+
+                  <?php
+
+                    // Generate the advertisment tag
+                    if ($eligible) {
+                      echo "<span class=\"tag slap is-warning\">Bet Available</span>";
+                    } else {
+                      echo "<span class=\"tag slap is-success\">Bet in Place</span>";
+                    }
+
+                  ?>
+
                 </div>
               </div>
 
@@ -174,7 +220,20 @@ foreach ($pdo->query($query) as $issue) {
               <div class="column is-one-half">
                 <fieldset class="odds">
                   <legend class="is-size-7">Current Odds</legend>
-                  <code>0</code> : <code>0</code> : <code>0</code>
+
+                  <?php
+
+                  $count = 0;
+                  foreach ($options as $option) {
+
+                    echo "<code>" . $tally[$option["text"]]+1 . "</code>";
+                    $count++;
+                    if ($count < count($options)) {
+                      echo " : ";
+                    }
+                  }
+                  ?>
+
                 </fieldset>
               </div>
 
@@ -195,7 +254,12 @@ foreach ($pdo->query($query) as $issue) {
                 <?php foreach ($options as $option): ?>
 
                   <button class="is-block has-text-centered card-footer-item p-0">
-                    <div class="odds" style="background:<?=$option["colour"]?>; height: 20px; width:64%"></div>
+                  <progress
+                    class="progress mb-2"
+                    value="<?=$tally[$option["text"]]+1?>"
+                    max="<?=count($bets)+count($options)?>"
+                    style="border-radius: 0px; --bulma-progress-value-background-color: <?=$option["colour"]?>;">
+                  </progress>
                     <p><?=$option["text"]?></p>
                   </button>
 
