@@ -156,7 +156,7 @@ if (!$issue) {
 
 } elseif (isset($eligible)) {
   $expired_reason = "You have already made a bet on this particular topic in the past. You cannot adjust or retract
-                     that bid without receiving the unfair gameplay advantage of hindsight. If you forgoet your bid,
+                     that bet without receiving the unfair gameplay advantage of \"hindsight\". If you forgoet your bid,
                      however, you can review it in the <a href=\"/records\">Records</a> page, and filter by your bets.";
 
 // We presume everything is valid, or at least valid enough to try bidding
@@ -167,8 +167,8 @@ if (!$issue) {
 
 // If we found anything that invalidated the operator's attempts, report it here
 if ($expired != "required") {
-  $expired_message = "<div class=\"notification center is-warning\">
-    <p class=\"title is-4\"><u>Bidding Disabled</u></p>
+  $expired_message = "<div class=\"notification center has-background-danger-dark has-text-warning-light\">
+    <p class=\"title is-4\">~ Betting Disabled ~</p>
     <p>" . $expired_reason . "</p>
   </div>";
 }
