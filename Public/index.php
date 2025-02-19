@@ -49,17 +49,18 @@ switch ($request) {
   case "/":
     include $pages . "main.php";
     break;
-  case "/admin":
 
-    // Check that they're actually an admin first
+    // Check someone is actually an admin before providing this page
+    case "/admin":
     if ($context["user"]["is_admin"]) {
       include $pages . "admin.php";
     } else {
+      http_response_code(403);
       include $parts . "403.php";
     }
     break;
 
-  // Run a basic check that they're not navigating here manually
+  // Run a basic check that they're not navigating to the bet page directly
   case "/bet":
     if (isset($_POST["bet_request"]) || (isset($_POST["bid"]) && isset($_POST["bet_request"]))) {
       include $pages . "bet.php";
@@ -75,6 +76,7 @@ switch ($request) {
     include $pages . "suggest.php";
     break;
 
+  // Provide a 404 response for all url params we don't understand
   default:
     http_response_code(404);
     include $parts . "404.php";

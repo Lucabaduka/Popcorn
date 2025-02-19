@@ -239,7 +239,12 @@ if ($expired != "required") {
                   <label class="bid-option">
                     <input type="radio" name="option" value="<?=$option["text"]?>" <?=$expired?>>
                     <span><?=$option["text"]?></span>
-                    <progress class="progress is-large" value="<?=$tally[$option["text"]]+1?>" max="<?=count($bets)+count($options)?>" style="--bulma-progress-value-background-color: <?=$option["colour"]?>;"></progress>
+                    <progress
+                      class="progress is-large"
+                      value="<?=$tally[$option["text"]]+1?>"
+                      max="<?=count($bets)+count($options)?>"
+                      style="--bulma-progress-value-background-color: <?=$option["colour"]?>;">
+                    </progress>
                   </label>
 
                 <?php endforeach; ?>
