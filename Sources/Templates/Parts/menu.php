@@ -9,12 +9,8 @@
 
   <p class="menu-label">General</p>
   <ul class="menu-list">
-  <li><a href="/">Main Page</a></li>
-    <li><a href="/bets">Your Bets</a></li>
-    <li><a href="/archives">Archives</a></li>
-  </ul>
-  <p class="menu-label">Extras</p>
-  <ul class="menu-list">
-    <li><a href="/suggest">Suggest a Bet</a></li>
+    <li><a href="/">Main Page</a></li>
+    <li><a href="/records">Records</a></li>
+    <li><a href="/suggest">Suggest an Issue</a></li>
   </ul>
 </aside>

@@ -150,13 +150,14 @@ if (!$issue) {
 
 // The issue has timed out or has moved to a pending stage
 } elseif ($issue["ends"] < time() || $issue["result"] > 0) {
-  $expired_reason = "This issue has already expired. It is now too late to place a bid. It may be possible to
-                     check its stats through the <a href=\"/bets\">My Bets</a> page.";
+  $expired_reason = "This issue's timer has expired, or it was moved to a pending/resolved state early. It is no longer
+                     possible to place a bet, but you can track the issue's status and results through the
+                     <a href=\"/records\">Records</a> page.";
 
 } elseif (isset($eligible)) {
   $expired_reason = "You have already made a bet on this particular topic in the past. You cannot adjust or retract
                      that bid without receiving the unfair gameplay advantage of hindsight. If you forgoet your bid,
-                     however, you can review it in the <a href=\"/bets\">My Bets</a> page.";
+                     however, you can review it in the <a href=\"/records\">Records</a> page, and filter by your bets.";
 
 // We presume everything is valid, or at least valid enough to try bidding
 } else {

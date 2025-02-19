@@ -59,10 +59,6 @@ switch ($request) {
     }
     break;
 
-  case "/bets":
-    include $pages . "bets.php";
-    break;
-
   // Run a basic check that they're not navigating here manually
   case "/bet":
     if (isset($_POST["bet_request"]) || (isset($_POST["bid"]) && isset($_POST["bet_request"]))) {
@@ -72,8 +68,8 @@ switch ($request) {
     }
     break;
 
-  case "/archives":
-    include $pages . "archives.php";
+  case "/records":
+    include $pages . "records.php";
     break;
   case "/suggest":
     include $pages . "suggest.php";
