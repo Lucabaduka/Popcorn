@@ -26,8 +26,8 @@
   .navbar:last-child {margin-right: 3rem;}
 }
 
-
 /* Tag Overrides */
+
 legend {
   width: auto;
   margin-left: auto;
@@ -224,7 +224,7 @@ fieldset {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale
 }
-.ico-dot:after, .ico-tart:after, .ico-eyebeast:after, .ico-rmm:after {
+.ico-dot:after, .ico-tart:after, .ico-eyebeast:after, .ico-rmm:after, .ico-popcorn:after {
   content: '';
   display: block;
   height: 1.5em;
@@ -232,18 +232,12 @@ fieldset {
   background-size: contain;
   margin-right: 0.25rem;
 }
-.ico-dot:after {
-  background-image: url("/Static/Assets/dot.svg");
-}
-.ico-tart:after {
-  background-image: url("/Static/Assets/tart.svg");
-}
-.ico-eyebeast:after {
-  background-image: url("/Static/Assets/eyebeast.svg");
-}
-.ico-rmm:after {
-  background-image: url("/Static/Assets/rmm.svg");
-}
+.ico-dot:after      {background-image: url("/Static/Assets/dot.svg");}
+.ico-tart:after     {background-image: url("/Static/Assets/tart.svg");}
+.ico-eyebeast:after {background-image: url("/Static/Assets/eyebeast.svg");}
+.ico-rmm:after      {background-image: url("/Static/Assets/rmm.svg");}
+.ico-popcorn:after  {background-image: url("/Static/Assets/popcorn.svg");}
+
 .navbar-end {
   margin-right: 2em;
 }
