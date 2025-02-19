@@ -101,6 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
   // Or send back a failure response with a message no one will probably see.
   } catch (Throwable $e) {
+
     $status = 1;
     $snacks = "<div class=\"notification is-danger\" id=\"snacks\">Something has gone wrong here.
     An error report has been logged to the server.</div>";
