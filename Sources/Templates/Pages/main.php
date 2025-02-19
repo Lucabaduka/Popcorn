@@ -188,9 +188,9 @@ foreach ($pdo->query($query) as $issue) {
             </div>
 
             <!-- Betting Options -->
-            <form method="POST" action="/bid">
+            <form method="POST" action="/bet">
               <footer class="card-footer">
-                <input type="hidden" name="bid_request" value="<?=$issue["id"]?>"/>
+                <input type="hidden" name="bet_request" value="<?=$issue["id"]?>"/>
 
                 <?php foreach ($options as $option): ?>
 
