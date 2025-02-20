@@ -69,7 +69,7 @@ function tablesort(e) {
 	// Return other columns to the unsorted data-set / icon
 	var olderTHs = table.querySelectorAll('th[data-dir]')
 	for (let i = 0; olderTHs[i]; i++) {
-		if (olderTHs[i] && olderTHs[i] !== e.currentTarget) olderTHs[i].dataset.dir = ""
+		if (olderTHs[i] && olderTHs[i] !== e.currentTarget) olderTHs[i].dataset.dir = ''
 	}
 
 	// Sorting direction
@@ -90,8 +90,8 @@ function tablesort(e) {
 		for (i = 0, ii = tds.length; i < ii; i++) {
 			td = tds[i]
 			value = td.dataset.sortValue ? td.dataset.sortValue : td.innerText
-			if (datatype === 'int') value = parseInt(value)
-			else if (datatype === 'float') value = parseFloat(value)
+			if (datatype === 'int') value = parseInt(value.replace(',', ''))
+			else if (datatype === 'float') value = parseFloat(value.replace(',', ''))
 			else if (datatype === 'date') value = new Date(value)
 			itab.values.push(value)
 		}
