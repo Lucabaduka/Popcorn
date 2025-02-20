@@ -1,5 +1,32 @@
+<?php
+
+/*
+*
+* Popcorn: Lofi Bets to Chill and Watch the World Burn to
+* Copyright 2025 Luca McGrath, MIT License
+* https://github.com/Lucabaduka/Popcorn
+*
+* This page allows an admin to edit an current issue or to
+* resolve a current / pending issue and deliver a payout
+* for all operators who turned in a bet with the winning
+* option.
+*
+*/
+
+
+
+
+
+
+
+
+
+
+
+?>
+
 <!DOCTYPE html>
-<html>
+<html data-theme="dark">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
