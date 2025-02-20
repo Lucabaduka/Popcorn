@@ -126,6 +126,11 @@ fieldset {
 .center-align {
   justify-content: center;
 }
+.default-line {
+  background-color: #46494f;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
 .depth {
   filter: drop-shadow(3px 3px 2px #0000004f);
 }
@@ -165,6 +170,12 @@ fieldset {
 .slap {
   rotate: 45deg;
 }
+
+tr.admin     {background: linear-gradient(to right, #59025b, transparent 25%);}
+tr.conflict  {background: linear-gradient(to right, #5b0202, transparent 25%);}
+tr.economics {background: linear-gradient(to right, #025b0c, transparent 25%);}
+tr.sports    {background: linear-gradient(to right, #937c00, transparent 25%);}
+tr.sapphire  {background: linear-gradient(to right, #0062b9, transparent 25%);}
 
 /* Card hell */
 
@@ -224,7 +235,7 @@ fieldset {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale
 }
-.ico-dot:after, .ico-tart:after, .ico-eyebeast:after, .ico-rmm:after, .ico-popcorn:after {
+.ico-dot:after, .ico-tart:after, .ico-eyebeast:after, .ico-rmm:after, .ico-popcorn:after, .ico-planet:after {
   content: '';
   display: block;
   height: 1.5em;
@@ -232,11 +243,27 @@ fieldset {
   background-size: contain;
   margin-right: 0.25rem;
 }
+.ico-planet:after {
+  content: '';
+  display: block;
+  height: 1.2em;
+  width: 1.2em;
+  background-size: contain;
+  margin-left: 0.25em;
+  margin-right: 0em;
+  margin-bottom: -.3em;
+}
+code .ico-planet:after {
+  margin-left: 0em;
+}
+
+
 .ico-dot:after      {background-image: url("/Static/Assets/dot.svg");}
 .ico-tart:after     {background-image: url("/Static/Assets/tart.svg");}
 .ico-eyebeast:after {background-image: url("/Static/Assets/eyebeast.svg");}
 .ico-rmm:after      {background-image: url("/Static/Assets/rmm.svg");}
 .ico-popcorn:after  {background-image: url("/Static/Assets/popcorn.svg");}
+.ico-planet:after   {background-image: url("/Static/Assets/planet.png");}
 
 .navbar-end {
   margin-right: 2em;

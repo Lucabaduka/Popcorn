@@ -90,8 +90,22 @@ foreach ($pdo->query($query) as $issue) {
       </div>
 
       <div class="content is-primary">
+        <h3 class="title mb-1 is-5">
+          Overview
+        </h3>
+        <hr class="default-line">
         <p>
-          Explore the bets below and wager what you think will happen in this unfathomably unstable world.
+          Active issues will be populated on this page. In each, you can pick one of the identified possible outcomes
+          that you think will happen, and then back those predictions with the in-game currency — the Refugia planet.
+          When the outcome is known, an admin will resolve the issue. Players who picked the winning option will get
+          their bet back, along with a share of the remaining betting pool, proportionate to their contribution.
+        </p>
+        <p>
+          Every player starts with twenty-five thousand planets. You can bet up to all of your available planets on
+          an issue or series of issues. While your funds are tied up, you nominally cannot use them to place new
+          bets. However, you are always allowed to place a bet of five thousand planets so that you can participate
+          in any issue. In other words, you're allowed to plunge yourself into debt and, just like life, there is no
+          statutory maximum level of possible debt.
         </p>
       </div>
 
@@ -99,9 +113,9 @@ foreach ($pdo->query($query) as $issue) {
       <article class="message is-success">
         <div class="message-body py-4">
           <div class="is-flex center-align" style="flex-wrap: wrap;">
-            <p class="mx-2"><strong>Balance:</strong> <code><?=number_format($op["bal"])?></code></p>
-            <p class="mx-2"><strong>Staked:</strong> <code><?=number_format($op["staked"])?></code></p>
-            <p class="mx-2"><strong>Max Bet:</strong> <code><?=number_format($op["max"])?></code></p>
+            <p class="mx-2"><strong>Balance:</strong> <code><i class="ico ico-planet"></i> <?=number_format($op["bal"])?></code></p>
+            <p class="mx-2"><strong>Staked:</strong> <code><i class="ico ico-planet"></i> <?=number_format($op["staked"])?></code></p>
+            <p class="mx-2"><strong>Max Bet:</strong> <code><i class="ico ico-planet"></i> <?=number_format($op["max"])?></code></p>
           </div>
         </div>
       </article>

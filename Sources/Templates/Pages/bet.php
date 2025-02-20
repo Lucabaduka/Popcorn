@@ -251,7 +251,7 @@ if ($expired != "required") {
 
                 <div class="center">
                   <h3 class="mb-2">Total Pool</h3>
-                  <code class="subtitle has-text-success"><?=number_format($pool+(count($options)*1000))?></code>
+                  <code class="subtitle has-text-success"><i class="ico ico-planet"></i> <?=number_format($pool+(count($options)*1000))?></code>
                 </div>
               </div>
             </div>
@@ -271,15 +271,15 @@ if ($expired != "required") {
                 <tbody>
                   <tr>
                     <th>Total Balance</th>
-                    <td><code class="has-text-success"><?=number_format($op["bal"])?></code></td>
+                    <td><code class="has-text-success"><i class="ico ico-planet"></i> <?=number_format($op["bal"])?></code></td>
                   </tr>
                   <tr>
                     <th>Unavailable (Staked)</th>
-                    <td><code><?=number_format($op["staked"])?></code></td>
+                    <td><code><i class="ico ico-planet"></i> <?=number_format($op["staked"])?></code></td>
                   </tr>
                   <tr>
                     <th>Max Bet Available</th>
-                    <td><code class="has-text-info"><?=number_format($op["max"])?></code></td>
+                    <td><code class="has-text-info"><i class="ico ico-planet"></i> <?=number_format($op["max"])?></code></td>
                   </tr>
                 </tbody>
               </table>
