@@ -171,14 +171,14 @@ foreach ($pdo->query($query) as $issue) {
     <button class="button is-success js-modal-trigger is-pulled-right" data-target="js-modal">New Issue</button>
     <h1 class="title is-4">Active Issues</h1>
 
-    <table class="table is-fullwidth has-text-centered">
+    <table class="table table-sortable is-hoverable is-fullwidth has-text-centered">
       <thead>
         <tr>
-          <th class="is-link has-text-centered">Category</th>
-          <th class="is-link has-text-centered">Question</th>
+          <th class="is-link has-text-centered" data-sort="int" data-dir="">ID</th>
+          <th class="is-link has-text-centered" data-sort="string" data-dir="">Question</th>
           <th class="is-link has-text-centered">Options</th>
-          <th class="is-link has-text-centered">Ends</th>
-          <th class="is-link has-text-centered">Status</th>
+          <th class="is-link has-text-centered" data-sort="date" data-dir="">Ends</th>
+          <th class="is-link has-text-centered" data-sort="string" data-dir="">Status</th>
           <th class="is-link has-text-centered">Edit</th>
         </tr>
       </thead>
@@ -187,8 +187,8 @@ foreach ($pdo->query($query) as $issue) {
       <tbody>
 
       <?php foreach ($issues as $issue): $issue["options"] = json_decode($issue["options"], True); ?>
-        <tr>
-          <td><?=$issue["cat"]?></td>
+        <tr class="<?=$issue["cat"]?>">
+          <td><code class="has-text-info"><strong><?=$issue["id"]?></strong></code></td>
           <td><?=$issue["question"]?></td>
 
           <td>
@@ -204,7 +204,7 @@ foreach ($pdo->query($query) as $issue) {
             ?>
           </td>
 
-          <td><?=date("Y-m-d H:i:s ", $issue["ends"])?></td>
+          <td><code><?=date("Y-m-d H:i:s ", $issue["ends"])?></code></td>
           <td><?php $status = $issue["result"] === 0 ? "Current" : "Pending"; echo $status;?></td>
           <td>
             <form method="POST" action="/resolve">
@@ -229,13 +229,13 @@ foreach ($pdo->query($query) as $issue) {
 
     <form method="POST">
       <div class="table-wrapper">
-        <table class="table is-fullwidth has-text-centered">
+        <table class="table table-sortable is-fullwidth has-text-centered">
           <thead>
             <tr>
               <th class="is-link has-text-centered">Select</th>
-              <th class="is-link has-text-centered">Author</th>
-              <th class="is-link has-text-centered">Suggestion</th>
-              <th class="is-link has-text-centered">Deliverable</th>
+              <th class="is-link has-text-centered" data-sort="string" data-dir="">Author</th>
+              <th class="is-link has-text-centered" data-sort="string" data-dir="">Suggestion</th>
+              <th class="is-link has-text-centered" data-sort="string" data-dir="">Deliverable</th>
             </tr>
           </thead>
           <tfoot>
@@ -408,6 +408,8 @@ foreach ($pdo->query($query) as $issue) {
 
 <script src="/Static/pop.js"></script>
 <script src="/Static/admin.js"></script>
+<script src="/Static/sort.js"></script>
+<script>document.querySelectorAll('.table-sortable').forEach(el => el.tsortable())</script>
 
 </body>
 </html>
