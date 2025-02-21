@@ -34,6 +34,9 @@ fieldset {
   padding: 0.25em 1em 0.5em 1em;
   border-radius: 25px;
 }
+form {
+  margin: 0;
+}
 legend {
   width: auto;
   margin-left: auto;
@@ -148,11 +151,13 @@ td {
   font-size: 1.6em;
   border: 1px solid #cbcbcb4a;
   border-radius: 4px;
-  padding-left: 6px;
+  padding-left: 8px;
   padding-right: 8px;
+  background: #0115228f;
 }
 .edit:hover {
   background: #1b223f;
+  border-color: #ffc439b8;
 }
 .foot-content {
   display: flex;

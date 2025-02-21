@@ -181,17 +181,16 @@ foreach ($pdo->query($query) as $issue) {
           $bets[$x] = $bet;
           $x++;
         }
-        if (!$bets) {
-          $bets = array();
-        }
+
+        // Determine the total betting pool and the counts of all bets so far
         $pool = 0;
         $tally = array();
         foreach ($bets as $bet) {
           $pool += $bet["volume"];
-          if (!array_key_exists($tally[$bet["opinion"]], $tally)) {
-            $tally[$bet["opinion"]] = 1;
-          } else {
+          if (isset($tally[$bet["opinion"]])) {
             $tally[$bet["opinion"]] += 1;
+          } else {
+            $tally[$bet["opinion"]] = 1;
           }
 
           // We'll also take the opportunity to see if they've bet before.
