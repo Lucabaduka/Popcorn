@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // The form returns the following convention
     // array(2) { ["idea"]=> string(5) "Beans" ["delivery"]=> string(14) "beans and rice" }
     $order = $pdo->prepare("INSERT INTO ideas ('id', 'operator', 'idea', 'delivery') VALUES (?, ?, ?, ?)");
-    $order->execute(array(NULL, $context["user"]["name"], $_POST["idea"], $_POST["delivery"]));
+    $order->execute(array(NULL, $context["user"]["name"], htmlspecialchars($_POST["idea"]), htmlspecialchars($_POST["delivery"])));
 
     // We assume everything is working at this point, so we'll prepare a snack for the JS to deliver to report it worked
     $status = 1;
