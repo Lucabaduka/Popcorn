@@ -115,16 +115,18 @@ $subtitle = $taglines[rand(0, count($taglines)-1)]
         </p>
       </div>
 
-      <!-- Current Operator Balance and Max -->
-      <article class="message is-success">
-        <div class="message-body py-4">
-          <div class="is-flex center-align" style="flex-wrap: wrap;">
-            <p class="mx-2"><strong>Balance:</strong> <code><i class="ico ico-planet"></i> <?=number_format($op["bal"])?></code></p>
-            <p class="mx-2"><strong>Staked:</strong> <code><i class="ico ico-planet"></i> <?=number_format($op["staked"])?></code></p>
-            <p class="mx-2"><strong>Max Bet:</strong> <code><i class="ico ico-planet"></i> <?=number_format($op["max"])?></code></p>
+      <?php if ($logged): ?>
+        <!-- Current Operator Balance and Max -->
+        <article class="message is-success">
+          <div class="message-body py-4">
+            <div class="is-flex center-align" style="flex-wrap: wrap;">
+              <p class="mx-2"><strong>Balance:</strong> <code><i class="ico ico-planet"></i> <?=number_format($op["bal"])?></code></p>
+              <p class="mx-2"><strong>Staked:</strong> <code><i class="ico ico-planet"></i> <?=number_format($op["staked"])?></code></p>
+              <p class="mx-2"><strong>Max Bet:</strong> <code><i class="ico ico-planet"></i> <?=number_format($op["max"])?></code></p>
+            </div>
           </div>
-        </div>
-      </article>
+        </article>
+      <?php endif; ?>
 
     </div>
 

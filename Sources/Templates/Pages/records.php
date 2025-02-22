@@ -65,12 +65,14 @@ foreach ($pdo->query($query) as $issue) {
   <div class="container is-block hero-body mclear py-4">
     <div class="notification">
 
-      <div class="tags mb-0 has-addons is-pulled-right">
-        <form method="POST">
-          <input type="hidden" name="you_bets" value="<?=$bets_toggle?>">
-          <button class="button <?=$bets_active?> filter">Your Bets</button>
-        </form>
-      </div>
+      <?php if ($logged): ?>
+        <div class="tags mb-0 has-addons is-pulled-right">
+          <form method="POST">
+            <input type="hidden" name="you_bets" value="<?=$bets_toggle?>">
+            <button class="button <?=$bets_active?> filter">Your Bets</button>
+          </form>
+        </div>
+      <?php endif; ?>
 
       <h1 class="title">Popcorn Records</h1>
       <h2 class="subtitle is-7">Our underhanded agents demanded information, straight from the Kernel</h2>
@@ -109,8 +111,11 @@ foreach ($pdo->query($query) as $issue) {
             <th class="is-link has-text-centered" data-sort="string" data-dir="">Category</th>
             <th class="is-link has-text-centered" data-sort="string" data-dir="">Question</th>
             <th class="is-link has-text-centered" data-sort="int"    data-dir="">Total Pool</th>
-            <th class="is-link has-text-centered" data-sort="int"    data-dir="">Your Bet</th>
-            <th class="is-link has-text-centered" data-sort="string" data-dir="">Resolution</th>
+            <?php if ($logged): ?>
+              <th class="is-link has-text-centered" data-sort="int"    data-dir="">Your Bet</th>
+            <?php endif; ?>
+            <th class="is-link has-text-centered" data-sort="string" data-dir="">Status</th>
+            <th class="is-link has-text-centered" data-sort="string" data-dir="">Answer</th>
             <th class="is-link has-text-centered" data-sort="int"    data-dir="">Payout</th>
           </tr>
         </thead>
@@ -161,7 +166,9 @@ foreach ($pdo->query($query) as $issue) {
             <td><?=ucwords($issue["cat"])?></td>
             <td><?=$issue["question"]?></td>
             <td><code class="has-text-warning"><?=number_format($pool+(count($options)*1000))?></code></td>
-            <td class="has-text-info"><code class="has-text-info"><?=$operator_bet?></code></td></td>
+            <?php if ($logged): ?>
+              <td class="has-text-info"><code class="has-text-info"><?=$operator_bet?></code></td></td>
+            <?php endif; ?>
 
               <?php
                 switch ($issue["result"]) {
@@ -178,6 +185,7 @@ foreach ($pdo->query($query) as $issue) {
               ?>
 
             <td><?=$current?></td>
+            <td>Beans</td>
             <td>0</td>
           </tr>
 

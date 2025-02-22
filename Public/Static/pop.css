@@ -272,7 +272,6 @@ code .ico-planet:after {
   margin-left: 0em;
 }
 
-
 .ico-dot:after      {background-image: url("/Static/Assets/dot.svg");}
 .ico-tart:after     {background-image: url("/Static/Assets/tart.svg");}
 .ico-eyebeast:after {background-image: url("/Static/Assets/eyebeast.svg");}
@@ -285,6 +284,75 @@ code .ico-planet:after {
 }
 .navbar-item {
   gap: 0.3rem;
+}
+
+/* Login */
+.bar {
+  background: url("/Static/Assets/cat.png"), #043300;
+  border-radius: 6px 6px 0 0;
+  box-shadow: 0 16px 20px rgba(255, 255, 255, 0.15) inset;
+  text-shadow: 0 0 10px #130901, 2px 1px 15px #000,0 0 20px #000;
+  background-size: contain;
+}
+.bar h1 {
+  overflow: hidden;
+  font-size: 1.1em;
+  font-family: "Tahoma", sans-serif;
+  font-weight: bold;
+  padding: 8px 12px 6px 6px;
+}
+.login {
+  max-width: 500px;
+  margin: 0 auto;
+  background: #131313;
+  border-radius: 6px;
+  border: 1px solid #043e23;
+  border-top: 0px;
+}
+.login hr {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.ssi_table {
+  color: #DFDAD0;
+  font-weight: bold;
+  border-collapse: initial;
+  border-spacing: 10px;
+  width: 100%;
+  margin: 0 auto;
+}
+.ssi_table input, .ssi_table button {
+  width: 100%;
+}
+.is-inline-grid {
+  display: inline-grid;
+}
+
+/* Notifs */
+
+.okay {
+  color: #fdf5d5;
+  background-color: #0264084a;
+  border: 1px solid #00ff3475;
+}
+.info {
+  color: #fffccf;
+  background-color: #0864f23d;
+  border: 1px solid #05fbfb70;
+}
+.warn {
+  color: #fff;
+  background-color: #fb8f05ad;
+  border: 1px solid #f5fd02a6;
+}
+.error {
+  color: #ffd7ac;
+  background-color: #ff070778;
+  border: 1px solid #fb18c2ad;
+}
+.okay, .info, .warn, .error {
+  padding: 5px;
+  border-radius: 5px;
 }
 
 /* Snackbar */

@@ -12,7 +12,13 @@
       <?php endif; ?>
 
       <a class="mobile navbar-item px-2 depth" href="/records">Records</a>
-      <a class="mobile navbar-item px-2 depth" href="/suggest">Ideas</a>
+
+      <?php if ($logged): ?>
+        <a class="mobile navbar-item px-2 depth" href="/suggest">Ideas</a>
+      <?php else: ?>
+        <a class="mobile navbar-item px-2 depth" href="/login">Login</a>
+      <?php endif; ?>
+
     </div>
 
     <div class="navbar-menu">

@@ -18,21 +18,30 @@
 
 $version = "0.1.0";
 
+// Load any libraries of functions and classes we've prepared earlier
+require("../Sources/Gears/gears.php");
+require("/var/www/calref/SSI.php"); // This is an absolute path to SMF's SSI
+
 // Testing
-$user_info["groups"] = array(9);
-$context["user"]["is_logged"] = true;
-$context["user"]["id"] = 1;
-$context["user"]["name"] = "Luca";
-$context["user"]["is_admin"] = true;
+// $context["user"]["is_logged"] = True;
+// $context["user"]["id"] = 1;
+// $context["user"]["name"] = "Luca";
+// $context["user"]["is_admin"] = True;
+
+// Set up our log wall. Palisades, if you will
+if (!$context["user"]["is_logged"]) {
+  $logged   = False;
+  $op["id"] = 0;
+} else {
+  $logged = True;
+  $op     = get_operator($pdo, $context);
+}
 
 // These are our webhooks to push updates to. This may become dynamic
 // and stored in the database late, but for now they are hard-coded
 $webhooks = [
-  
-];
 
-// Load any libraries of functions and classes we've prepared earlier
-require("../Sources/Gears/gears.php");
+];
 
 // Setting up shorthand
 $gears   = dirname(__DIR__, 1) . "/Sources/Gears/";
@@ -45,7 +54,6 @@ $scripts = "/Static/Scripts/";
 // but we will prepare to change that if necessary.
 $status = 0;
 $snacks = "";
-$op = get_operator($pdo, $context);
 
 // Handle the routing to our blessed site
 $request = $_SERVER["REQUEST_URI"];
@@ -58,6 +66,13 @@ switch ($request) {
 
     // Check someone is actually an admin before providing this page
     case "/admin":
+
+    // Logged only
+    if (!$logged) {
+      include $pages . "login.php";
+      break;
+    }
+
     if ($context["user"]["is_admin"]) {
       include $pages . "admin.php";
     } else {
@@ -68,6 +83,13 @@ switch ($request) {
 
   // Run a basic check that they're not navigating to the bet page directly
   case "/bet":
+
+    // Logged only
+    if (!$logged) {
+      include $pages . "login.php";
+      break;
+    }
+
     if (isset($_POST["bet_request"]) || (isset($_POST["bid"]) && isset($_POST["bet_request"]))) {
       include $pages . "bet.php";
     } else {
@@ -75,10 +97,39 @@ switch ($request) {
     }
     break;
 
+  case "/login":
+    include $pages . "login.php";
+    break;
+
   case "/records":
     include $pages . "records.php";
     break;
+
+  // Check someone is actually an admin before providing this page as well
+  case "/resolve":
+
+    // Logged only
+    if (!$logged) {
+      include $pages . "login.php";
+      break;
+    }
+
+    if ($context["user"]["is_admin"] && isset($_POST["resolve_issue"])) {
+      include $pages . "resolve.php";
+    } else {
+      http_response_code(403);
+      include $parts . "403.php";
+    }
+    break;
+
   case "/suggest":
+
+    // Logged only
+    if (!$logged) {
+      include $pages . "login.php";
+      break;
+    }
+
     include $pages . "suggest.php";
     break;
 
@@ -87,7 +138,5 @@ switch ($request) {
     http_response_code(404);
     include $parts . "404.php";
 }
-
-
 
 ?>
