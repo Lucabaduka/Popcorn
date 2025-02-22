@@ -39,6 +39,17 @@ function db_build($dbname) {
   $pdo = null;
 }
 
+// A function to produce an "s" if a supplied array has multiple items or an empty string if it's not
+// Expected to be called anywhere
+// Returns a grammar-correct string to be concatinated to any other string
+function pluralise ($array) {
+  if ($array != 1) {
+    return "s";
+  } else {
+    return "";
+  }
+}
+
 // A function to retrieve the operator's profile
 // Always called when a page is loaded
 // Returns an array of the Operators table based on ID
@@ -78,35 +89,59 @@ function get_operator ($pdo, $context) {
 
 }
 
-// Function to reduce a fraction to its lowest form
-// NOTE TO LUCA, VALUES NEED TO BE ROUNDED
-function reduceFraction($x, $y)
-{
-    $d;
-    $d = __gcd($x, $y);
+// Function to post an alert to all Discord webhook URLs alerting the presence of a new issue for betting
+// Called in the admin.php file on creating a new issue if new_issue returns a success response
+// Returns 0 for success or (presumably) dies
+function push_new_issue($webhooks, $name, $cat) {
 
-    $x = $x / $d;
-    $y = $y / $d;
+  // We will translate the category to an appropriate Discord embed sidebar
+  $cat_colours = array(
+    "admin"     => "8e0891",
+    "economics" => "025b0c",
+    "conflict"  => "910808",
+    "sports"    => "ffbf00",
+    "sapphire"  => "0087ff",
+  );
 
-    echo("x = " . $x . ", y = " . $y);
-}
+  // Nowe we will construct the json object that will be sent to create the embed
+  $json_data = json_encode([
 
-function __gcd($a, $b)
-{
-    if ($b == 0)
-        return $a;
-    return __gcd($b, $a % $b);
+    "username" => "Popcorn",
+    "avatar_url" => "https://pop.calref.ca/Static/Assets/logo.png",
+    "embeds" => [
+      [
+        "type" => "rich",
+        "description" => "## [" . $name . "](https://pop.calref.ca/)",
 
-}
+        "url" => "https://pop.calref.ca",
+        "color" => hexdec($cat_colours[$cat]),
 
-// A function to produce an "s" if a supplied array has multiple items or an empty string if it's not
-// Expected to be called anywhere
-// Returns a grammar-correct string to be concatinated to any other string
-function pluralise ($array) {
-  if ($array != 1) {
-    return "s";
-  } else {
-    return "";
+        "author" => [
+          "name" => "New " . ucwords($cat) . " Issue Available for Betting:",
+          "icon_url" => "https://pop.calref.ca/Static/Assets/planet.png"
+        ],
+      ]
+    ]
+
+  ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+
+  // Post to all webhooks that we know about
+  foreach ($webhooks as $webhook) {
+
+    $ch = curl_init($webhook);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
   }
+
+  return 0;
 }
+
 ?>

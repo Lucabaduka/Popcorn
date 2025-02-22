@@ -56,6 +56,8 @@ function new_issue($pdo, $issue_data) {
   $order = $pdo->prepare("INSERT INTO topics ('id', 'cat', 'question', 'context', 'options', 'ends', 'result', 'resolution')
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
   $order->execute($issue);
+
+  // In the future, we could also return $pdo->lastInsertId() to get the auto-incremented ID
   return 0;
 }
 
@@ -91,6 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $status = 1;
         $snacks = "<div class=\"notification is-info\" id=\"snacks\">Successfully added <code>" . $issue_data["question"] .
         "</code> to the issue database.</div>";
+        $response = push_new_issue($webhooks, $issue_data["question"], $issue_data["category"]);
 
       } else {
         $status = 1;

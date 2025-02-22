@@ -25,6 +25,12 @@ $context["user"]["id"] = 1;
 $context["user"]["name"] = "Luca";
 $context["user"]["is_admin"] = true;
 
+// These are our webhooks to push updates to. This may become dynamic
+// and stored in the database late, but for now they are hard-coded
+$webhooks = [
+  
+];
+
 // Load any libraries of functions and classes we've prepared earlier
 require("../Sources/Gears/gears.php");
 
