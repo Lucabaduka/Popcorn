@@ -40,6 +40,15 @@ foreach ($pdo->query($query) as $issue) {
   }
 }
 
+// Make a random tagline subtitle for the day
+$taglines = [
+  "Lofi Bets to Chill and Watch the World Burn to",
+  "My alternate name idea was the \"Irish Kneebreaker Association\", but Emily said no.",
+  ];
+$seed = floor(time()/86400);
+srand($seed);
+$subtitle = $taglines[rand(0, count($taglines)-1)]
+
 ?>
 
 <!DOCTYPE html>
@@ -66,9 +75,6 @@ foreach ($pdo->query($query) as $issue) {
 
   <div class="container mclear py-4">
 
-
-
-
     <div class="notification">
       <div class="tags mb-0 has-addons is-pulled-right">
         <span class="tag px-2 is-dark is-size-7">Version</span>
@@ -84,7 +90,7 @@ foreach ($pdo->query($query) as $issue) {
             Popcorn
           </h1>
           <h2 class="subtitle is-6">
-            Lofi Bets to Chill and Watch the World Burn to
+            <?=$subtitle?>
           </h2>
         </div>
       </div>
@@ -254,8 +260,9 @@ foreach ($pdo->query($query) as $issue) {
 
                   $count = 0;
                   foreach ($options as $option) {
+                    if (!isset($tally[$option["text"]])) $tally[$option["text"]] = 1;
 
-                    echo "<code>" . $tally[$option["text"]]+1 . "</code>";
+                    echo "<code>" . $tally[$option["text"]] . "</code>";
                     $count++;
                     if ($count < count($options)) {
                       echo " : ";
