@@ -30,11 +30,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   } catch (Throwable $e) {
 
     $status = 1;
-    $snacks = "<div class=\"notification is-danger\" id=\"snacks\">Something has gone wrong here.<br>"
-               . $e->getLine() . ": " . $e->getMessage() . "</code></div>";
-  }
+    $snacks = "<div class=\"notification is-danger\" id=\"snacks\">Something has gone wrong here.
+    An error report has been logged to the server.</div>";
+    error_log("--- Script error in suggest.php (" . date("Y-m-d H:i:s ", time()) . ") ---\n" . $e . "\n\n", 3, $errors);
 
   }
+}
 
 ?>
 
