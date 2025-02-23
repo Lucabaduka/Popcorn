@@ -20,13 +20,13 @@ $version = "0.1.0";
 
 // Load any libraries of functions and classes we've prepared earlier
 require("../Sources/Gears/gears.php");
-require("/var/www/calref/SSI.php"); // This is an absolute path to SMF's SSI
+// require("/var/www/calref/SSI.php"); // This is an absolute path to SMF's SSI
 
 // Testing
-// $context["user"]["is_logged"] = True;
-// $context["user"]["id"] = 1;
-// $context["user"]["name"] = "Luca";
-// $context["user"]["is_admin"] = True;
+$context["user"]["is_logged"] = True;
+$context["user"]["id"] = 1;
+$context["user"]["name"] = "Luca";
+$context["user"]["is_admin"] = True;
 
 // Set up our log wall. Palisades, if you will
 if (!$context["user"]["is_logged"]) {
@@ -48,7 +48,6 @@ $gears   = dirname(__DIR__, 1) . "/Sources/Gears/";
 $pages   = dirname(__DIR__, 1) . "/Sources/Templates/Pages/";
 $parts   = dirname(__DIR__, 1) . "/Sources/Templates/Parts/";
 $errors  = dirname(__DIR__, 1) . "/Sources/Data/error.log";
-$scripts = "/Static/Scripts/";
 
 // In any given page, we will assume we do not need a toast
 // but we will prepare to change that if necessary.
@@ -98,6 +97,12 @@ switch ($request) {
     break;
 
   case "/login":
+
+    // Conversely, if we are already logged in, just go to main
+    if ($logged) {
+      include $pages . "main.php";
+      break;
+    }
     include $pages . "login.php";
     break;
 

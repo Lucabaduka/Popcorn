@@ -206,7 +206,7 @@ foreach ($pdo->query($query) as $issue) {
 
 </div>
 
-<script src="/Static/sort.js"></script>
+<script src="/Static/Scripts/sort.js"></script>
 <script>document.querySelector('.table-sortable').tsortable()</script>
 
 </body>

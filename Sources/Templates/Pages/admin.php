@@ -344,7 +344,7 @@ foreach ($pdo->query($query) as $issue) {
               <input class="input is-info" name="new_issue[options][<?=($i)?>][text]" type="text">
             </div>
             <div class="field">
-              <div name="category" class="select is-info">
+              <div class="select is-info">
                 <select id="selector_<?=($i+1)?>" name="new_issue[options][<?=($i)?>][colour]">
 
                   <optgroup label="Blue Themes">
@@ -409,9 +409,9 @@ foreach ($pdo->query($query) as $issue) {
 
 <?=$snacks?>
 
-<script src="/Static/pop.js"></script>
-<script src="/Static/admin.js"></script>
-<script src="/Static/sort.js"></script>
+<script src="/Static/Scripts/pop.js"></script>
+<script src="/Static/Scripts/admin.js"></script>
+<script src="/Static/Scripts/sort.js"></script>
 <script>document.querySelectorAll('.table-sortable').forEach(el => el.tsortable())</script>
 
 </body>

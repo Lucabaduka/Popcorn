@@ -313,7 +313,7 @@ if ($expired != "required") {
 
 <?=$snacks?>
 
-<script src="/Static/pop.js"></script>
+<script src="/Static/Scripts/pop.js"></script>
 
 </body>
 </html>

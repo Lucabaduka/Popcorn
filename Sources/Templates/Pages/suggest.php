@@ -110,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <?=$snacks?>
 
-<script src="/Static/pop.js"></script>
+<script src="/Static/Scripts/pop.js"></script>
 
 </body>
 </html>
