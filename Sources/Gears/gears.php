@@ -39,6 +39,10 @@ function db_build($dbname) {
   $pdo = null;
 }
 
+// Set any issues whose end is before the current time to pending
+$order = $pdo->prepare("UPDATE topics SET result = 1 WHERE ends < (?)");
+$order->execute([time()]);
+
 // A function to produce an "s" if a supplied array has multiple items or an empty string if it's not
 // Expected to be called anywhere
 // Returns a grammar-correct string to be concatinated to any other string
