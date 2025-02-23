@@ -89,6 +89,15 @@ function get_operator ($pdo, $context) {
 
 }
 
+// Function to pull a requested issue by ID from the database and commit it to an array
+// Called in places like bet.php and resolve.php to prepare forms
+// Returns an array for the issue if it exists, or False if it doesn't ("big(int) if true")
+function get_issue($pdo, $id) {
+  $query =  "SELECT * FROM topics WHERE id = $id";
+  $issue = $pdo->query($query)->fetch(PDO::FETCH_ASSOC);
+  return $issue;
+}
+
 // Function to post an alert to all Discord webhook URLs alerting the presence of a new issue for betting
 // Called in the admin.php file on creating a new issue if new_issue returns a success response
 // Returns 0 for success or (presumably) dies

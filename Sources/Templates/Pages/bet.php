@@ -69,10 +69,7 @@ if (is_numeric($_POST["bet_request"])) {
 }
 
 // Load the issue and commit it to an array
-// $issue is False here if there was no active topic by that ID
-// If this were postgresql, I'd say "big(int) if true"
-$query =  "SELECT * FROM topics WHERE id = $issue_id";
-$issue = $pdo->query($query)->fetch(PDO::FETCH_ASSOC);
+$issue = get_issue($pdo, $issue_id);
 
 // Load any existing bids and commit them to an array
 $x = 0;
