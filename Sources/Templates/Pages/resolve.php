@@ -311,10 +311,10 @@ $options = json_decode($issue["options"], True);
               <input type="hidden" name="resolve_issue" value="<?=$issue["id"]?>">
 
               <header class="bid card-header mflex">
-                <p class="card-header-title is-size-5 center-align">Resolve Issue Favouring...</p>
+                <p class="card-header-title is-size-5 center-align">Resolve Issue</p>
               </header>
 
-              <p class="py-4 mb-0">Choose a betting option that was correct</p>
+              <p class="py-4 mb-0">Distrubute payments for operators who chose...</p>
               <div class="is-flex center">
 
                 <?php $options = json_decode($issue["options"], True);
@@ -335,17 +335,17 @@ $options = json_decode($issue["options"], True);
 
               <hr>
 
-              <p>Cancel the bet and refund the participants</p>
               <div class="is-flex center">
                 <label class="bid-option has-background-black">
                   <input type="radio" name="option" value="--abort" <?=$disable?>>
-                  <span>Call Off the Issue</span>
+                  <span>None of the Above</span>
                 </label>
               </div>
+              <p>Cancel the bet and refund the participants</p>
 
               <hr class="mt-2 mb-4">
 
-              <button class="button is-success is-dark" <?=$disable?>>Resolve Issue</button>
+              <button class="button is-success is-dark" <?=$disable?>>Resolve</button>
 
             </form>
           </div>
