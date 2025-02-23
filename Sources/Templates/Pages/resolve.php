@@ -15,7 +15,126 @@
 *
 */
 
+echo "<pre>";
+print_r($_POST);
+echo "</pre>";
 
+try {
+
+  // We are receiving a request to edit
+  if (isset($_POST["edit_issue"])) {
+
+  $issue_data = $_POST["edit_issue"];
+  $issue_id   = $_POST["resolve_issue"];
+
+  // Default unset hours to midnight
+  if (strlen($issue_data["time_end"]) < 1) {
+    $issue_data["time_end"] = "00:00:00";
+  }
+
+  // Translate the datetime input to unix
+  $issue_data["ends"] = strtotime($issue_data["date_end"] . " " . $issue_data["time_end"]);
+
+  // Prepare the SQL order and execute it
+  $order = $pdo->prepare(
+    "UPDATE topics
+      SET cat      = (?),
+          question = (?),
+          context  = (?),
+          options  = (?),
+          ends     = (?),
+          result   = (?)
+        WHERE id   = (?)");
+
+  $order->execute([
+    $issue_data["category"],
+    $issue_data["question"],
+    $issue_data["context"],
+    json_encode($issue_data["options"]),
+    $issue_data["ends"],
+    $issue_data["result"],
+    $issue_id
+  ]);
+
+  // Send back a success response
+  $status = 1;
+  $snacks = "<div class=\"notification is-info\" id=\"snacks\">Records Successfully Updated.</div>.";
+  }
+
+
+  // We are receiving a request to resolve
+  elseif (isset($_POST["option"])) {
+
+
+
+
+
+
+
+
+
+
+
+
+  }
+
+
+  // We are receiving a request to delete
+  elseif (isset($_POST["delete_issue"])) {
+
+    // Run a basic check to see if it's a number and then delete it from the record
+    if (is_numeric($_POST["delete_issue"])) {
+      $id = $_POST["delete_issue"];
+      $statement = "DELETE FROM topics WHERE id= (?)";
+      $order = $pdo->prepare($statement);
+      $order->execute([$id]);
+    }
+
+    // Send back a success response
+    $status = 1;
+    $snacks = "<div class=\"notification is-info\" id=\"snacks\">Successfully obliterated</div>.";
+  }
+
+} catch (Throwable $e) {
+
+  $status = 1;
+  $snacks = "<div class=\"notification is-danger\" id=\"snacks\">Something has gone wrong here.
+  An error report has been logged to the server.</div>";
+  error_log("--- Script error in resolve.php (" . date("Y-m-d H:i:s ", time()) . ") ---\n" . $e . "\n\n", 3, $errors);
+}
+
+// We have now completed the pre-processing
+// Presume the forms controls should work
+$disable = "";
+
+// Load the issue and commit it to an array
+// If it's not a number or if get_issue returns False, it's not an ID or not an issue
+if (is_numeric($_POST["resolve_issue"])) {
+  $issue_id = $_POST["resolve_issue"];
+  $issue = get_issue($pdo, $issue_id);
+  if (!$issue) {
+    $disable = "disabled";
+  }
+} else {
+  $disable = "disabled";
+}
+
+// If the issue number is invalid, we'll make a dummy one to load the page
+if ($disable === "disabled") {
+  $issue = array(
+    "id"         => 0,
+    "cat"        => "admin",
+    "question"   => "No Issue Selected",
+    "context"    => "",
+    "options"    => json_encode(array()),
+    "ends"       => 0,
+    "result"     => 0,
+    "resolution" => ""
+  );
+}
+
+// Load the options, if there are any
+$options = json_decode($issue["options"], True);
 
 ?>
 
@@ -27,6 +146,7 @@
     <meta name="description" content="Popcorn: Lofi Bets to Chill and Watch the World Burn to. Check out what fucked up things are or may happen in the future, and make in-game 'planets' on how you think they will progress.">
     <meta name="theme-color" content="#25ac25">
     <meta property="og:image" content="/Static/Assets/logo.png">
+    <meta id="status" data-values="<?=$status?>">
     <link rel="icon" type="image/x-icon" href="/Static/favicon.ico">
     <link rel="stylesheet" href="/Static/bulma.css" type="text/css">
     <link rel="stylesheet" href="/Static/pop.css" type="text/css">
@@ -157,12 +277,12 @@
 
               <div class="field is-horizontal">
                 <div class="field-label is-normal">
-                  <label class="label" for="edit_issue[status]">Status</label>
+                  <label class="label" for="edit_issue[result]">Status</label>
                 </div>
                 <div class="field-body">
                   <div class="field">
                     <div class="select is-warning">
-                      <select name="edit_issue[status]" <?=$disable?>>
+                      <select name="edit_issue[result]" <?=$disable?>>
                         <?php
                           if ($issue["result"] === 0) {
                             echo "<option value=\"0\" selected>Current</option>";
@@ -237,23 +357,13 @@
   </div>
 </div>
 
-  <!-- Footer -->
-  <?php include $parts . "footer.php"; ?>
+<?=$snacks?>
 
-<script>
+<!-- Footer -->
+<?php include $parts . "footer.php"; ?>
 
-// Get the category type from the card, and make it the default select
-value = document.getElementById("card").className.split(" ");
-let element = document.getElementById("category");
-element.value = value[1];
-
-// Update question title to the title input whenever it changes
-function update() {
-  let value = document.getElementById("question_input").value;
-  document.getElementById("question_header").innerHTML = value;
-}
-
-</script>
+<script src="/Static/Scripts/pop.js"></script>
+<script src="/Static/Scripts/resolve.js"></script>
 
 </div>
 
