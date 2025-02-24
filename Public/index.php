@@ -16,17 +16,23 @@
 *
 */
 
-$version = "0.1.0";
+$version = "1.0.0";
 
 // Load any libraries of functions and classes we've prepared earlier
 require("../Sources/Gears/gears.php");
-// require("/var/www/calref/SSI.php"); // This is an absolute path to SMF's SSI
+require("/var/www/calref/SSI.php"); // This is an absolute path to SMF's SSI
+
+// These are our webhooks to push updates to. This may become dynamic
+// and stored in the database late, but for now they are hard-coded
+$webhooks = [
+
+];
 
 // Testing
-$context["user"]["is_logged"] = True;
-$context["user"]["id"] = 1;
-$context["user"]["name"] = "Luca";
-$context["user"]["is_admin"] = True;
+// $context["user"]["is_logged"] = True;
+// $context["user"]["id"] = 1;
+// $context["user"]["name"] = "Luca";
+// $context["user"]["is_admin"] = True;
 
 // Set up our log wall. Palisades, if you will
 if (!$context["user"]["is_logged"]) {
@@ -36,12 +42,6 @@ if (!$context["user"]["is_logged"]) {
   $logged = True;
   $op     = get_operator($pdo, $context);
 }
-
-// These are our webhooks to push updates to. This may become dynamic
-// and stored in the database late, but for now they are hard-coded
-$webhooks = [
-
-];
 
 // Setting up shorthand
 $gears   = dirname(__DIR__, 1) . "/Sources/Gears/";

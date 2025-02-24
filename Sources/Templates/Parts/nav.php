@@ -27,7 +27,6 @@
         <a href="https://eyebeast.calref.ca/" class="navbar-item depth"><i class="ico ico-eyebeast"></i>Eyebeast</a>
         <a href="https://tart.calref.ca/" class="navbar-item depth"><i class="ico ico-tart"></i>Tart</a>
         <a href="https://pop.calref.ca/" class="navbar-item depth"><i class="ico ico-popcorn"></i>Popcorn</a>
-        <a href="https://rmm.calref.ca/" class="navbar-item depth"><i class="ico ico-rmm"></i>RMM</a>
       </div>
     </div>
   </nav>

@@ -86,7 +86,7 @@ foreach ($pdo->query($query) as $issue) {
       </div>
     </div>
 
-    <div class="is-flex mb-2 center-align">
+    <!-- <div class="is-flex mb-2 center-align">
 
       <fieldset class="mx-3">
       <legend class="is-size-7">Filters</legend>
@@ -99,7 +99,7 @@ foreach ($pdo->query($query) as $issue) {
         </div>
       </fieldset>
 
-    </div>
+    </div> -->
 
     <div class="notification">
 

@@ -135,7 +135,7 @@ $subtitle = $taglines[rand(0, count($taglines)-1)]
 
   </div>
 
-  <div class="is-flex mb-2 center-align">
+  <!-- <div class="is-flex mb-2 center-align">
 
     <fieldset class="mx-3">
     <legend class="is-size-7">Filters</legend>
@@ -144,9 +144,7 @@ $subtitle = $taglines[rand(0, count($taglines)-1)]
         <button class="button filter is-small">🔴 Conflict</button>
         <button class="button filter is-small">🟢 Economics</button>
         <button class="button filter is-small">🟡 Sports</button>
-        <?php if (count($all_issues["sapphire"]) > 0) : ?>
-          <button class="button filter is-small">🔵 Sapphire</button>
-        <?php endif; ?>
+        <button class="button filter is-small">🔵 Sapphire</button>
       </div>
     </fieldset>
 
@@ -160,7 +158,7 @@ $subtitle = $taglines[rand(0, count($taglines)-1)]
       </div>
     </fieldset>
 
-  </div>
+  </div> -->
 
 </div>
 

@@ -79,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <form method="POST">
           <div class="field">
           <label class="label" for="delivery">What is the premise of the bet?</label>
-            <textarea id="idea" name="idea" class="textarea is-medium"></textarea>
+            <textarea id="idea" name="idea" class="textarea is-medium">And also possibly its options</textarea>
           </div>
 
           <div class="field">
