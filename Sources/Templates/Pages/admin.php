@@ -20,48 +20,6 @@ $greens_lib  = ["DarkGreen",      "ForestGreen",   "Green",     "MediumSeaGreen"
 $yellows_lib = ["GoldenRod",      "Gold",          "Yellow",    "Khaki",         "PaleGoldenRod"];
 $purples_lib = ["MediumPurple",   "BlueViolet",    "Indigo",    "DarkViolet",    "RebeccaPurple"];
 
-// Function to take form data from the admin page and insert a new issue to the database
-// Called when the issue modal closes via the submit button
-// Returns a 0 on success or a 1 on failure
-function new_issue($pdo, $issue_data) {
-
-  // We can't require fields in this modal because of how we handle modals in general
-  // Therefore we will simply validate the form here in the backend.
-  $required = ["question", "context", "category", "date_end"];
-  foreach ($required as $requirement) {
-    if (!isset($issue_data[$requirement]) || $issue_data[$requirement] === "") return 1;
-  }
-
-  // Default unset hours to midnight
-  if (strlen($issue_data["time_end"]) < 1) $issue_data["time_end"] = "00:00";
-
-  // Translate the datetime input to unix
-  $issue_data["ends"] = strtotime($issue_data["date_end"] . " " . $issue_data["time_end"] . ":00");
-
-  // By default, all options will have a colour set from the select, so we must exclude any that don't have a name
-  foreach ($issue_data["options"] as $entry) {
-    if (strlen($entry["text"]) > 0) $issue_data["c_options"][] = $entry;
-  }
-
-  // We presume all is well at this point.
-  $issue = array(
-    NULL,                                  // id INTEGER PRIMARY KEY
-    $issue_data["category"],               // cat TEXT
-    $issue_data["question"],               // question TEXT
-    $issue_data["context"],                // context TEXT
-    json_encode($issue_data["c_options"]), // options JSON
-    $issue_data["ends"],                   // ends INTEGER
-    0,                                     // result INTEGER (0: current, 1: pending, 2: finished, 3: refunded)
-    "",);                                  // resolution TEXT (what admin writes to describe the outcome)
-
-  $order = $pdo->prepare("INSERT INTO topics ('id', 'cat', 'question', 'context', 'options', 'ends', 'result', 'resolution')
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-  $order->execute($issue);
-
-  // In the future, we could also return $pdo->lastInsertId() to get the auto-incremented ID
-  return 0;
-}
-
 // We have received some kind of form request
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 

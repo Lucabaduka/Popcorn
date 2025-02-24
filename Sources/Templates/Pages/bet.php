@@ -12,49 +12,6 @@
 *
 */
 
-// Function to commit a new bet for an issue to the database, including the operator's active tally
-// Called on the bet.php page when submitting its form.
-// Returns 0 on success or 1 on failure
-function new_bet($pdo, $op, $data, $issue) {
-
-  // Firstly is the bid a number?
-  if (!is_numeric($data["bid"])) {
-    return 1;
-  }
-
-  // Second, is the bid a valid option
-  $pass = False;
-  $options = json_decode($issue["options"], True);
-  foreach($options as $key=>$val) {
-    if(is_array($val) && in_array($data["option"], $val)) {
-      $pass = True;
-    }
-  } if (!$pass) {
-    return 1;
-  }
-
-  // Finally, make sure that the bid is not somehow over the operator's maximum
-  if ($data["bid"] > $op["max"]) {
-    return 1;
-  }
-
-  // We are probably clear at this point to start updating the db
-  // First commit the item to the bets table
-  $bet = array($issue["id"], $op["id"], $data["option"], $data["bid"]);
-  $order = $pdo->prepare("INSERT INTO bets ('topic', 'operator', 'opinion', 'volume') VALUES (?, ?, ?, ?)");
-  $order->execute($bet);
-
-  // Let's not forget to add to the operator's staked
-  $op["staked"] += $data["bid"];
-
-  // We'll need to immediately call get_operator on success here to get the new values
-  $order = $pdo->prepare("UPDATE operators SET staked = (?) WHERE id = (?)");
-  $order->execute([$op["staked"], $op["id"]]);
-
-  // Return success
-  return 0;
-}
-
 // Validate the post request by making sure we're not receiving garbage
 $issue_id = 0;
 if (is_numeric($_POST["bet_request"])) {
@@ -63,25 +20,6 @@ if (is_numeric($_POST["bet_request"])) {
 
 // Load the issue and commit it to an array
 $issue = get_issue($pdo, $issue_id);
-
-// Load any existing bets and commit them to an array
-$bets = get_bets($pdo, $issue_id);
-
-$pool = 0;
-$tally = array();
-foreach ($bets as $bet) {
-  $pool += $bet["volume"];
-  if (!array_key_exists($tally[$bet["opinion"]], $tally)) {
-    $tally[$bet["opinion"]] = 1;
-  } else {
-    $tally[$bet["opinion"]] += 1;
-  }
-
-  // We'll also take the opportunity to see if they've bet before.
-  if ($bet["operator"] === $op["id"]) {
-    $eligible = False;
-  }
-}
 
 // Here, we are receiving an actual bid submission
 if (!isset($eligible) && (isset($_POST["option"]) && isset($_POST["bid"]))) {
@@ -114,6 +52,26 @@ if (!isset($eligible) && (isset($_POST["option"]) && isset($_POST["bid"]))) {
     error_log("--- Script error in bet.php (" . date("Y-m-d H:i:s ", time()) . ") ---\n" . $e . "\n\n", 3, $errors);
   }
 
+}
+
+// Load any existing bets and commit them to an array
+$bets = get_bets($pdo, $issue_id);
+
+$options = json_decode($issue["options"], True);
+$pool = count($options)*1000;
+$tally = array();
+foreach ($bets as $bet) {
+  $pool += $bet["volume"];
+  if (!array_key_exists($tally[$bet["opinion"]], $tally)) {
+    $tally[$bet["opinion"]] = 1;
+  } else {
+    $tally[$bet["opinion"]] += 1;
+  }
+
+  // We'll also take the opportunity to see if they've bet before.
+  if ($bet["operator"] === $op["id"]) {
+    $eligible = False;
+  }
 }
 
 // Disable our inputs on the front end if the page is loaded
@@ -239,7 +197,7 @@ if ($expired != "required") {
 
                 <div class="center">
                   <h3 class="mb-2">Total Pool</h3>
-                  <code class="subtitle has-text-success"><i class="ico ico-planet"></i> <?=number_format($pool+(count($options)*1000))?></code>
+                  <code class="subtitle has-text-success"><i class="ico ico-planet"></i> <?=number_format($pool)?></code>
                 </div>
               </div>
             </div>

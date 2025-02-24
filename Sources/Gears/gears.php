@@ -127,6 +127,48 @@ function get_bets($pdo, $id) {
   return $bets;
 }
 
+// Function to take form data from the admin page and insert a new issue to the database
+// Called in admin.php when the issue modal closes via the submit button
+// Returns a 0 on success or a 1 on failure
+function new_issue($pdo, $issue_data) {
+
+  // We can't require fields in this modal because of how we handle modals in general
+  // Therefore we will simply validate the form here in the backend.
+  $required = ["question", "context", "category", "date_end"];
+  foreach ($required as $requirement) {
+    if (!isset($issue_data[$requirement]) || $issue_data[$requirement] === "") return 1;
+  }
+
+  // Default unset hours to midnight
+  if (strlen($issue_data["time_end"]) < 1) $issue_data["time_end"] = "00:00";
+
+  // Translate the datetime input to unix
+  $issue_data["ends"] = strtotime($issue_data["date_end"] . " " . $issue_data["time_end"] . ":00");
+
+  // By default, all options will have a colour set from the select, so we must exclude any that don't have a name
+  foreach ($issue_data["options"] as $entry) {
+    if (strlen($entry["text"]) > 0) $issue_data["c_options"][] = $entry;
+  }
+
+  // We presume all is well at this point.
+  $issue = array(
+    NULL,                                  // id INTEGER PRIMARY KEY
+    $issue_data["category"],               // cat TEXT
+    $issue_data["question"],               // question TEXT
+    $issue_data["context"],                // context TEXT
+    json_encode($issue_data["c_options"]), // options JSON
+    $issue_data["ends"],                   // ends INTEGER
+    0,                                     // result INTEGER (0: current, 1: pending, 2: finished, 3: refunded)
+    "",);                                  // resolution TEXT (what admin writes to describe the outcome)
+
+  $order = $pdo->prepare("INSERT INTO topics ('id', 'cat', 'question', 'context', 'options', 'ends', 'result', 'resolution')
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+  $order->execute($issue);
+
+  // In the future, we could also return $pdo->lastInsertId() to get the auto-incremented ID
+  return 0;
+}
+
 // Function to post an alert to all Discord webhook URLs alerting the presence of a new issue for betting
 // Called in the admin.php file on creating a new issue if new_issue returns a success response
 // Returns 0 for success or (presumably) dies
@@ -179,6 +221,49 @@ function push_new_issue($webhooks, $name, $cat) {
 
   }
 
+  return 0;
+}
+
+// Function to commit a new bet for an issue to the database, including the operator's active tally
+// Called on the bet.php page when submitting its form.
+// Returns 0 on success or 1 on failure
+function new_bet($pdo, $op, $data, $issue) {
+
+  // Firstly is the bid a number?
+  if (!is_numeric($data["bid"])) {
+    return 1;
+  }
+
+  // Second, is the bid a valid option
+  $pass = False;
+  $options = json_decode($issue["options"], True);
+  foreach($options as $key=>$val) {
+    if(is_array($val) && in_array($data["option"], $val)) {
+      $pass = True;
+    }
+  } if (!$pass) {
+    return 1;
+  }
+
+  // Finally, make sure that the bid is not somehow over the operator's maximum
+  if ($data["bid"] > $op["max"]) {
+    return 1;
+  }
+
+  // We are probably clear at this point to start updating the db
+  // First commit the item to the bets table
+  $bet = array($issue["id"], $op["id"], $data["option"], $data["bid"]);
+  $order = $pdo->prepare("INSERT INTO bets ('topic', 'operator', 'opinion', 'volume') VALUES (?, ?, ?, ?)");
+  $order->execute($bet);
+
+  // Let's not forget to add to the operator's staked
+  $op["staked"] += $data["bid"];
+
+  // We'll need to immediately call get_operator on success here to get the new values
+  $order = $pdo->prepare("UPDATE operators SET staked = (?) WHERE id = (?)");
+  $order->execute([$op["staked"], $op["id"]]);
+
+  // Return success
   return 0;
 }
 
