@@ -103,6 +103,25 @@ function get_issue($pdo, $id) {
   return $issue;
 }
 
+// Function to pull all the bets of an issue from the database and commit it to an array
+// Called in places like bet.php and resolve.php to prepare forms and handle resolutions
+// Always returns an array of bets. The array will be empty if there are no bets or the ID is invalid
+function get_bets($pdo, $id) {
+
+  $x = 0;
+  $bets = array();
+  $query =  "SELECT * FROM bets WHERE topic = $id";
+  foreach ($pdo->query($query) as $bet) {
+    $bets[$x] = $bet;
+    $x++;
+  }
+  if (!$bets) {
+    $bets = array();
+  }
+
+  return $bets;
+}
+
 // Function to post an alert to all Discord webhook URLs alerting the presence of a new issue for betting
 // Called in the admin.php file on creating a new issue if new_issue returns a success response
 // Returns 0 for success or (presumably) dies

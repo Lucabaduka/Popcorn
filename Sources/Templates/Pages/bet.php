@@ -64,17 +64,9 @@ if (is_numeric($_POST["bet_request"])) {
 // Load the issue and commit it to an array
 $issue = get_issue($pdo, $issue_id);
 
-// Load any existing bids and commit them to an array
-$x = 0;
-$bets = array();
-$query =  "SELECT * FROM bets WHERE topic = $issue_id";
-foreach ($pdo->query($query) as $bet) {
-  $bets[$x] = $bet;
-  $x++;
-}
-if (!$bets) {
-  $bets = array();
-}
+// Load any existing bets and commit them to an array
+$bets = get_bets($pdo, $issue_id);
+
 $pool = 0;
 $tally = array();
 foreach ($bets as $bet) {

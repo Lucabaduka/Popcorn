@@ -135,14 +135,8 @@ foreach ($pdo->query($query) as $issue) {
             $issue_id     = $issue["id"];
             $operator_bet = 0;
 
-            // Load any existing bids and commit them to an array
-            $x = 0;
-            $bets = array();
-            $query =  "SELECT * FROM bets WHERE topic = $issue_id";
-            foreach ($pdo->query($query) as $bet) {
-              $bets[$x] = $bet;
-              $x++;
-            }
+            // Load any existing bets and commit them to an array
+            $bets = get_bets($pdo, $issue_id);
 
             // Determine the betting pool and whether the operator has a bet in it
             $pool = 0;
@@ -180,6 +174,9 @@ foreach ($pdo->query($query) as $issue) {
                     break;
                   case 2:
                     $current = "Finished";
+                    break;
+                  case 3:
+                    $current = "Aborted";
                     break;
                 }
               ?>

@@ -113,6 +113,9 @@ $subtitle = $taglines[rand(0, count($taglines)-1)]
           in any issue. In other words, you're allowed to plunge yourself into debt and, just like life, there is no
           statutory maximum level of possible debt.
         </p>
+        <p class="centre">
+          All times are in UTC-8.
+        </p>
       </div>
 
       <?php if ($logged): ?>
@@ -181,14 +184,8 @@ $subtitle = $taglines[rand(0, count($taglines)-1)]
         $eligible     = True;
         $operator_bet = "None";
 
-        // Load any existing bids and commit them to an array
-        $x = 0;
-        $bets = array();
-        $query =  "SELECT * FROM bets WHERE topic = $issue_id";
-        foreach ($pdo->query($query) as $bet) {
-          $bets[$x] = $bet;
-          $x++;
-        }
+        // Load any existing bets and commit them to an array
+        $bets = get_bets($pdo, $issue_id);
 
         // Determine the total betting pool and the counts of all bets so far
         $pool = 0;
