@@ -44,19 +44,12 @@ function new_bet($pdo, $op, $data, $issue) {
   $order = $pdo->prepare("INSERT INTO bets ('topic', 'operator', 'opinion', 'volume') VALUES (?, ?, ?, ?)");
   $order->execute($bet);
 
-  // Then add the issue the active list in the operator table
-  // The only way we can do this is to decode the global $op's variable list with json
-  // Then append it to the resulting array, re-encode it and update the table with $op
-  $active = json_decode($op["active"]);
-  $active[] = $issue["id"];
-  $op["active"] = json_encode($active);
-
   // Let's not forget to add to the operator's staked
   $op["staked"] += $data["bid"];
 
   // We'll need to immediately call get_operator on success here to get the new values
-  $order = $pdo->prepare("UPDATE operators SET active = (?), staked = (?) WHERE id = (?)");
-  $order->execute([$op["active"], $op["staked"], $op["id"]]);
+  $order = $pdo->prepare("UPDATE operators SET staked = (?) WHERE id = (?)");
+  $order->execute([$op["staked"], $op["id"]]);
 
   // Return success
   return 0;

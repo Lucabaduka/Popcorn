@@ -26,10 +26,11 @@ $pdo = new PDO("sqlite:$dbname");
 function db_build($dbname) {
   $pdo = new PDO("sqlite:$dbname");
   $statements = array(
-    "CREATE TABLE IF NOT EXISTS operators (id INTEGER, pdn TEXT, bal INTEGER, staked INTEGER, active JSON);",
+    "CREATE TABLE IF NOT EXISTS operators (id INTEGER, pdn TEXT, bal INTEGER, staked INTEGER);",
     "CREATE TABLE IF NOT EXISTS topics (id INTEGER PRIMARY KEY, cat TEXT, question TEXT, context TEXT, options JSON, ends INTEGER, result INTEGER, resolution TEXT);",
     "CREATE TABLE IF NOT EXISTS bets (topic INTEGER, operator INTEGER, opinion TEXT, volume INTEGER);",
-    "CREATE TABLE IF NOT EXISTS ideas (id INTEGER PRIMARY KEY, operator TEXT, idea TEXT, delivery TEXT);"
+    "CREATE TABLE IF NOT EXISTS ideas (id INTEGER PRIMARY KEY, operator TEXT, idea TEXT, delivery TEXT);",
+    "CREATE TABLE IF NOT EXISTS payouts (topic INTEGER, operator INTEGER, payout INTEGER);"
   );
 
   foreach($statements as $statement){
