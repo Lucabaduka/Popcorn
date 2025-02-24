@@ -15,10 +15,6 @@
 *
 */
 
-echo "<pre>";
-print_r($_POST);
-echo "</pre>";
-
 try {
 
   // We are receiving a request to edit
@@ -96,16 +92,103 @@ try {
 
       // Send back a success response
       $status = 1;
-      $snacks = "<div class=\"notification is-info\" id=\"snacks\">Issue aborted; Refunds sent to "
-                . count($bets) . " operators.</div>.";
+      $snacks = "<div class=\"notification is-info\" id=\"snacks\">Issue aborted; Refunds sent to <code>"
+                . count($bets) . "</code> operators.</div>.";
+
+    // Now we will handle regular bet payments / resolutions
+    } else {
+
+      // We need to determine how many betting options there were (to get the total pool)
+      // Who voted for the correct options (to get rewarded)
+      // How much the bet (and then the proportional payout)
+
+      // We need the total betting pool, and we'll start with Dot's bet.
+      $issue = get_issue($pdo, $issue_id);
+      $pool = (count(json_decode($issue["options"], True))*1000);
+
+      // We must also collect the winners and determine their pool
+      // Additionally, track to what extent of the winning pool they contributed
+      $winning_pool = 0;
+      $winners = array();
+      $losers = array();
+      $x = 0; // this will point the winner array
+      $y = 0; // this will point the loser array
+      foreach ($bets as $bet) {
+
+        // We'll now continue to build that total pool
+        $pool += $bet["volume"];
+
+        // Collect the winners
+        if ($bet["opinion"] === $option) {
+          $winning_pool += $bet["volume"];
+          $winners[$x]  = array(
+            "operator"  => $bet["operator"],
+            "bet"     => $bet["volume"]);
+          $x++;
+
+        // Collect the losers
+        } else {
+          $losers[$y]   = array(
+            "operator"  => $bet["operator"],
+            "bet"     => $bet["volume"]);
+          $y++;
+        }
+
+      }
+
+      // We will now subtract losers accounts and free up their staked
+      foreach ($losers as $loser) {
+
+        // Summon the account
+        $operator = $loser["operator"];
+        $query    = "SELECT * FROM operators WHERE id = $operator";
+        $account  = $pdo->query($query)->fetch(PDO::FETCH_ASSOC);
+
+        // Perform the maths
+        $bal = $account["bal"] - $loser["volume"];
+        $staked = $account["staked"] - $loser["volume"];
+
+        // Update the record
+        $order = $pdo->prepare("UPDATE operators SET bal = (?), staked = (?) WHERE id = (?)");
+        $order->execute([$bal, $staked, $operator]);
+
+      }
+
+      // Next, distribute the winnings and free up their staked as well
+      foreach ($winners as $winner) {
+
+        // Summon the account
+        $operator = $winner["operator"];
+        $query    = "SELECT * FROM operators WHERE id = $operator";
+        $account  = $pdo->query($query)->fetch(PDO::FETCH_ASSOC);
+
+        // We need to determine the payment. The player gets the same share of the $pool that their
+        // bet ($winner["bet"]) makes up of the $winning_pool
+        $payout = round($pool * ($winner["bet"]/$winning_pool));
+        $bal = $account["bal"] + $payout;
+        $staked = $account["staked"] - $winner["bet"];
+
+        // Update the record
+        $order = $pdo->prepare("UPDATE operators SET bal = (?), staked = (?) WHERE id = (?)");
+        $order->execute([$bal, $staked, $operator]);
+
+        // Now, we will create records in the payouts table so records.php can access them easier
+        $order = $pdo->prepare("INSERT INTO payouts ('topic', 'operator', 'payout') VALUES (?, ?, ?)");
+        $order->execute([$issue_id, $operator, $payout]);
+
+      }
+
+      // Now we need to close out the issue
+      $order = $pdo->prepare("UPDATE topics SET result = (?), resolution = (?) WHERE id = (?)");
+      $order->execute([2, $option, $issue_id]);
+
+      // Send back a success response
+      $status = 1;
+      $snacks = "<div class=\"notification is-info\" id=\"snacks\">Issue Resolved. There were <code>" . count($losers)
+                . "</code> wrong answers, while <code><i class=\"ico ico-planet\"></i> " . $pool . "</code> was
+                distributed to <code>" . count($winners) . "</code> operators.</div>.";
 
     }
-
-
-
-
-
-
 
     // This will let us load the issue, but disable the ability to alter it with the form
     $resolved = True;
@@ -203,12 +286,12 @@ $options = json_decode($issue["options"], True);
   <?php include $parts . "nav.php"; ?>
 
   <!-- Menu Panel -->
-  <?php //include $parts . "menu.php"; ?>
+  <?php include $parts . "menu.php"; ?>
 
 <!-- Content -->
 <div class="container hero-body mclear py-4">
   <div class="notification">
-      <form method="POST" onSubmit="return confirm('Confirm issue delete? Bet refunds will NOT be issued.')">
+      <form method="POST" onSubmit="return confirm('Confirm issue delete? This is not reversable and bet refunds will NOT be issued.')">
         <input type="hidden" name="resolve_issue" value="<?=$issue["id"]?>">
         <input type="hidden" name="delete_issue" value="<?=$issue["id"]?>">
         <button class="button is-danger is-dark js-modal-trigger is-pulled-right" <?=$disable?>>Delete Issue</button>
@@ -226,7 +309,7 @@ $options = json_decode($issue["options"], True);
               <p id="question_header" class="card-header-title is-size-5 center-align"><?=$issue["question"]?></p>
             </header>
 
-            <form class="m-4" method="POST">
+            <form class="m-4" method="POST" onSubmit="return confirm('Are you sure you want to edit this issue? Edits cannot be reversed.')">
               <input type="hidden" name="resolve_issue" value="<?=$issue["id"]?>">
 
               <div class="field is-horizontal">
@@ -349,7 +432,7 @@ $options = json_decode($issue["options"], True);
         <div class="column is-half">
 
           <div class="card <?=$issue["cat"]?> centre" style="height:100%">
-            <form method="POST">
+            <form method="POST" onSubmit="return confirm('Are you sure you want to resolve and payout this issue? This cannot be reversed.')">
               <input type="hidden" name="resolve_issue" value="<?=$issue["id"]?>">
 
               <header class="bid card-header mflex">

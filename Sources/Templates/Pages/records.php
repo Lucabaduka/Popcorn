@@ -126,7 +126,7 @@ foreach ($pdo->query($query) as $issue) {
         <?php if (count($issues) === 0): ?>
 
           <tr>
-            <td colspan="7">No new suggestions at this time.</td>
+            <td colspan="8">No new suggestions at this time.</td>
           </tr>
 
         <?php else:
@@ -187,8 +187,8 @@ foreach ($pdo->query($query) as $issue) {
               ?>
 
             <td><?=$current?></td>
-            <td>Beans</td>
-            <td>0</td>
+            <td><?=$issue["resolution"]?></td>
+            <td><?=get_payout($pdo, $issue["id"], $op["id"])?></td>
           </tr>
 
           <?php endforeach; ?>

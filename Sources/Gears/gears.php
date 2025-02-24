@@ -58,7 +58,7 @@ function pluralise ($array) {
 // A function to retrieve the operator's profile
 // Always called when a page is loaded
 // Returns an array of the Operators table based on ID
-function get_operator ($pdo, $context) {
+function get_operator($pdo, $context) {
 
   // Check if the operator's profile is in the operators table
   $query = $pdo->prepare("SELECT * FROM operators WHERE id = (?)");
@@ -125,6 +125,22 @@ function get_bets($pdo, $id) {
   }
 
   return $bets;
+}
+
+// Function to get the record of how much an operator has received from a previously successful bet
+// Called in records.php when generating its main table
+// Returns a string of the formatted int payout, if there is one, or an empty string if there's not
+function get_payout($pdo, $issue_id, $operator) {
+  $query =  "SELECT * FROM payouts WHERE topic = $issue_id AND operator = $operator";
+  $result = $pdo->query($query)->fetch(PDO::FETCH_ASSOC);
+
+  if (!$result) {
+    $payout = "";
+  } else {
+    $payout = "<code class=\"has-text-success\">" . number_format($result["payout"]) . "</code>";
+  }
+
+  return $payout;
 }
 
 // Function to take form data from the admin page and insert a new issue to the database
