@@ -1,8 +1,6 @@
 # Popcorn: Lofi Bets ![Version 1.0.0](https://img.shields.io/badge/Version-1.0.0-0099ff)
 
-## Overview
 Popcorn is a betting game written in PHP, which relies on a [Simple Machines Forum](https://www.simplemachines.org/) database to handle its operators' accounts. It allows any admin of that forum to create, modify, and resolve any hypothetical betting topic, with issue categories of administration, conflict, economics, sports, and a more important-looking "sapphire" category. Any operator can bet on those topics to see how high they can get their account to score.
-
 
 ## Usage
 Every player starts with twenty-five thousand Refugia planets (the in-game currency). An operator can bet up to all of their planets on one issue, or spread them out more generally. However, an operator is always allowed to place at least a five thousand planet bet so that they can participate in any issue. In other words, they are allowed to plunge themselves into debt without any kind of statutory maximum, or try to claw out of debt if they have nothing.
@@ -40,3 +38,5 @@ Every current and past issue, along with their outcomes are posted to the record
 
 </VirtualHost>
 ```
+
+5. Set ownership of the pop directory to `www-data:www-data` so that PHP has write access over its database. You can do this with `sudo chown -R www-data:www-data /your/popcorn/path`
