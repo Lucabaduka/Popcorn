@@ -44,14 +44,15 @@ function new_issue($pdo, $issue_data) {
   }
 
   // We presume all is well at this point.
-  $issue = array(NULL,                                  // id INTEGER PRIMARY KEY
-                 $issue_data["category"],               // cat TEXT
-                 $issue_data["question"],               // question TEXT
-                 $issue_data["context"],                // context TEXT
-                 json_encode($issue_data["c_options"]), // options JSON
-                 $issue_data["ends"],                   // ends INTEGER
-                 0,                                     // result INTEGER (0: current, 1: pending, 2: finished)
-                 "",);                                  // resolution TEXT (what admin writes to describe the outcome)
+  $issue = array(
+    NULL,                                  // id INTEGER PRIMARY KEY
+    $issue_data["category"],               // cat TEXT
+    $issue_data["question"],               // question TEXT
+    $issue_data["context"],                // context TEXT
+    json_encode($issue_data["c_options"]), // options JSON
+    $issue_data["ends"],                   // ends INTEGER
+    0,                                     // result INTEGER (0: current, 1: pending, 2: finished, 3: refunded)
+    "",);                                  // resolution TEXT (what admin writes to describe the outcome)
 
   $order = $pdo->prepare("INSERT INTO topics ('id', 'cat', 'question', 'context', 'options', 'ends', 'result', 'resolution')
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
@@ -191,7 +192,7 @@ foreach ($pdo->query($query) as $issue) {
 
       <?php foreach ($issues as $issue): $issue["options"] = json_decode($issue["options"], True); ?>
         <tr class="<?=$issue["cat"]?>">
-          <td><code class="has-text-info"><strong><?=$issue["id"]?></strong></code></td>
+          <td><code><strong><?=$issue["id"]?></strong></code></td>
           <td><?=$issue["question"]?></td>
 
           <td>

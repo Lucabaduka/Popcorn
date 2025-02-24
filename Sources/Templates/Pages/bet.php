@@ -130,6 +130,12 @@ if (!$issue) {
     "options" => json_encode(array(), JSON_FORCE_OBJECT),
   );
 
+
+// The issue has timed out or has moved to a pending stage
+} elseif ($issue["result"] === 3) {
+  $expired_reason = "This issue's betting was called off because none of the options turned out to be what happened.<br>
+                     Correspondingly, all players who participated in the issue were refunded their bets in full.";
+
 // The issue has timed out or has moved to a pending stage
 } elseif ($issue["ends"] < time() || $issue["result"] > 0) {
   $expired_reason = "This issue's timer has expired, or it was moved to a pending/resolved state early. It is no longer
