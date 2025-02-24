@@ -192,10 +192,10 @@ $subtitle = $taglines[rand(0, count($taglines)-1)]
       $tally = array();
       foreach ($bets as $bet) {
         $pool += $bet["volume"];
-        if (isset($tally[$bet["opinion"]])) {
-          $tally[$bet["opinion"]] += 1;
-        } else {
+        if (!isset($tally[$bet["opinion"]], $tally)) {
           $tally[$bet["opinion"]] = 1;
+        } else {
+          $tally[$bet["opinion"]] += 1;
         }
 
         // We'll also take the opportunity to see if they've bet before.
@@ -259,9 +259,9 @@ $subtitle = $taglines[rand(0, count($taglines)-1)]
 
                 $count = 0;
                 foreach ($options as $option) {
-                  if (!isset($tally[$option["text"]])) $tally[$option["text"]] = 1;
+                  if (!isset($tally[$option["text"]])) $tally[$option["text"]] = 0;
 
-                  echo "<code>" . $tally[$option["text"]] . "</code>";
+                  echo "<code>" . $tally[$option["text"]]+1 . "</code>";
                   $count++;
                   if ($count < count($options)) {
                     echo " : ";

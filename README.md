@@ -5,9 +5,9 @@ Popcorn is a betting game written in PHP, which relies on a [Simple Machines For
 ## Usage
 Every player starts with twenty-five thousand Refugia planets (the in-game currency). An operator can bet up to all of their planets on one issue, or spread them out more generally. However, an operator is always allowed to place at least a five thousand planet bet so that they can participate in any issue. In other words, they are allowed to plunge themselves into debt without any kind of statutory maximum, or try to claw out of debt if they have nothing.
 
-Beyond the player account creation generating 25,000 planets, money is also added to the game whenever a topic is created. For every betting option that an issue has, a bet is automatically placed for 1,000 from the system itself. This means a three-option issue will always have a minimum payout of 3,000 planets split between the winning players.
+Beyond the player account creation generating 25,000 planets, money is also added to the game whenever a topic is created. For every betting option that an issue has, a bet is automatically placed for 1,000 from the system itself. This means a three-option issue will always have a minimum payout of 3,000 planets, split between the winning players.
 
-All issues have a ending timestamp, were after they are moved to an pending state, waiting for an admin to arrive and act as the Arbiter of Truth. As the Arbiter of Truth, an admin can set one of the betting options as the canonical outcome, and distribute payments according to how much the player contributed to the pool against other winners. If no betting option was correct, the admin can also abort the bet and refund anyone who staked in-game money on it.
+All issues have a ending timestamp, whereafter they are moved to a pending state, waiting for an admin to arrive and act as the Arbiter of Truth. As the Arbiter of Truth, an admin can set one of the betting options as the canonical outcome, and distribute payments according to how much the player contributed to the pool against other winners. If no betting option was correct, the admin can also abort the bet and refund anyone who staked in-game money on it.
 
 Every current and past issue, along with their outcomes are posted to the records page which operators can consult at any time.
 

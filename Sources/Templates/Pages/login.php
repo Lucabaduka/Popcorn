@@ -26,7 +26,7 @@
     <link rel="icon" type="image/x-icon" href="/Static/favicon.ico">
     <link rel="stylesheet" href="/Static/bulma.css" type="text/css">
     <link rel="stylesheet" href="/Static/pop.css" type="text/css">
-    <title>Popcorn | <?=$title?></title>
+    <title>Popcorn | Log In</title>
   </head>
 <body>
 
@@ -44,7 +44,7 @@
     <div class="login">
 
       <div class="bar">
-        <h1 class="title is-4">Log in</h1>
+        <h1 class="title is-4">Log In</h1>
       </div>
       <div class="subbox p-2">
         <div class="info center mx-2 my-4">
