@@ -145,6 +145,11 @@ foreach ($pdo->query($query) as $issue) {
               if ($bet["operator"] === $op["id"]) $operator_bet = number_format($bet["volume"]);
             }
 
+            // Note that there is no pool for refunded issues, even historically
+            if ($issue["result"] != 3) {
+              $pool += (count($options)*1000);
+            }
+
             // if the Your Bets filter is on and the operator has not bet, skip
             if ($operator_bet === 0 && $bets_toggle === 0) continue;
 
@@ -159,7 +164,7 @@ foreach ($pdo->query($query) as $issue) {
             </td>
             <td><?=ucwords($issue["cat"])?></td>
             <td><?=$issue["question"]?></td>
-            <td><code class="has-text-warning"><?=number_format($pool+(count($options)*1000))?></code></td>
+            <td><code class="has-text-warning"><?=number_format($pool)?></code></td>
             <?php if ($logged): ?>
               <td class="has-text-info"><code class="has-text-info"><?=$operator_bet?></code></td></td>
             <?php endif; ?>
@@ -176,7 +181,7 @@ foreach ($pdo->query($query) as $issue) {
                     $current = "Finished";
                     break;
                   case 3:
-                    $current = "Aborted";
+                    $current = "Refunded";
                     break;
                 }
               ?>

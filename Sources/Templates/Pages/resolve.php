@@ -24,47 +24,82 @@ try {
   // We are receiving a request to edit
   if (isset($_POST["edit_issue"])) {
 
-  $issue_data = $_POST["edit_issue"];
-  $issue_id   = $_POST["resolve_issue"];
+    $issue_data = $_POST["edit_issue"];
+    $issue_id   = $_POST["resolve_issue"];
 
-  // Default unset hours to midnight
-  if (strlen($issue_data["time_end"]) < 1) {
-    $issue_data["time_end"] = "00:00:00";
+    // Default unset hours to midnight
+    if (strlen($issue_data["time_end"]) < 1) {
+      $issue_data["time_end"] = "00:00:00";
+    }
+
+    // Translate the datetime input to unix
+    $issue_data["ends"] = strtotime($issue_data["date_end"] . " " . $issue_data["time_end"]);
+
+    // Prepare the SQL order and execute it
+    $order = $pdo->prepare(
+      "UPDATE topics
+        SET cat      = (?),
+            question = (?),
+            context  = (?),
+            options  = (?),
+            ends     = (?),
+            result   = (?)
+          WHERE id   = (?)");
+
+    $order->execute([
+      $issue_data["category"],
+      $issue_data["question"],
+      $issue_data["context"],
+      json_encode($issue_data["options"]),
+      $issue_data["ends"],
+      $issue_data["result"],
+      $issue_id
+    ]);
+
+    // Send back a success response
+    $status = 1;
+    $snacks = "<div class=\"notification is-info\" id=\"snacks\">Records Successfully Updated.</div>.";
+
   }
-
-  // Translate the datetime input to unix
-  $issue_data["ends"] = strtotime($issue_data["date_end"] . " " . $issue_data["time_end"]);
-
-  // Prepare the SQL order and execute it
-  $order = $pdo->prepare(
-    "UPDATE topics
-      SET cat      = (?),
-          question = (?),
-          context  = (?),
-          options  = (?),
-          ends     = (?),
-          result   = (?)
-        WHERE id   = (?)");
-
-  $order->execute([
-    $issue_data["category"],
-    $issue_data["question"],
-    $issue_data["context"],
-    json_encode($issue_data["options"]),
-    $issue_data["ends"],
-    $issue_data["result"],
-    $issue_id
-  ]);
-
-  // Send back a success response
-  $status = 1;
-  $snacks = "<div class=\"notification is-info\" id=\"snacks\">Records Successfully Updated.</div>.";
-  }
-
 
   // We are receiving a request to resolve
   elseif (isset($_POST["option"])) {
 
+    // Grab the issue ID, the resolution option, and any bets the issue has
+    $issue_id = $_POST["resolve_issue"];
+    $option = $_POST["option"];
+    $bets = get_bets($pdo, $issue_id);
+
+    // First handle the possibility we are calling off the issue
+    if ($option === "--abort") {
+
+      // Update the database entry to mark the issue has been aborted
+      $order = $pdo->prepare("UPDATE topics SET result = (?), resolution = (?) WHERE id = (?)");
+      $order->execute([3, "None of These", $issue_id]);
+
+      // Refund the bets that have been submitted
+      foreach ($bets as $bet) {
+
+        // Grab the operator
+        $operator = $bet["operator"];
+        $query    =  "SELECT * FROM operators WHERE id = $operator";
+        $account  = $pdo->query($query)->fetch(PDO::FETCH_ASSOC);
+
+        // Do the maths
+        $staked = $account["staked"] - $bet["volume"];
+
+        // Process the refund
+        $order = $pdo->prepare("UPDATE operators SET staked = (?) WHERE id = (?)");
+        $order->execute([$staked, $operator]);
+
+      }
+
+      // Send back a success response
+      $status = 1;
+      $snacks = "<div class=\"notification is-info\" id=\"snacks\">Issue aborted; Refunds sent to "
+                . count($bets) . " operators.</div>.";
+
+    }
 
 
 
@@ -72,9 +107,8 @@ try {
 
 
 
-
-
-
+    // This will let us load the issue, but disable the ability to alter it with the form
+    $resolved = True;
 
   }
 
@@ -103,8 +137,8 @@ try {
   error_log("--- Script error in resolve.php (" . date("Y-m-d H:i:s ", time()) . ") ---\n" . $e . "\n\n", 3, $errors);
 }
 
-// We have now completed the pre-processing
-// Presume the forms controls should work
+// Now that the pre-processing is done, we assume the form should work, unless we later determine otherwise
+// Note that this is a string that can switch to "disabled" because we echo it directly to the form
 $disable = "";
 
 // Load the issue and commit it to an array
@@ -112,15 +146,23 @@ $disable = "";
 if (is_numeric($_POST["resolve_issue"])) {
   $issue_id = $_POST["resolve_issue"];
   $issue = get_issue($pdo, $issue_id);
+
+  // Disable if we did not find an issue
   if (!$issue) {
     $disable = "disabled";
+
+  // Disable the form if we just resolved the issue
+  } elseif (isset($resolved)) {
+    $disable = "disabled";
   }
+
+// We somehow received junk
 } else {
   $disable = "disabled";
 }
 
 // If the issue number is invalid, we'll make a dummy one to load the page
-if ($disable === "disabled") {
+if ($disable === "disabled" && !isset($resolved)) {
   $issue = array(
     "id"         => 0,
     "cat"        => "admin",
@@ -166,7 +208,7 @@ $options = json_decode($issue["options"], True);
 <!-- Content -->
 <div class="container hero-body mclear py-4">
   <div class="notification">
-      <form method="POST">
+      <form method="POST" onSubmit="return confirm('Confirm issue delete? Bet refunds will NOT be issued.')">
         <input type="hidden" name="resolve_issue" value="<?=$issue["id"]?>">
         <input type="hidden" name="delete_issue" value="<?=$issue["id"]?>">
         <button class="button is-danger is-dark js-modal-trigger is-pulled-right" <?=$disable?>>Delete Issue</button>
