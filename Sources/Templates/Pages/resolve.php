@@ -63,8 +63,10 @@ try {
 
     // Grab the issue ID, the resolution option, and any bets the issue has
     $issue_id = $_POST["resolve_issue"];
-    $option = $_POST["option"];
-    $bets = get_bets($pdo, $issue_id);
+    $option   = $_POST["option"];
+    $bets     = get_bets($pdo, $issue_id);
+    $issue    = get_issue($pdo, $issue_id);
+    $pool     = 0; // We only use this for the webhook's convenience
 
     // First handle the possibility we are calling off the issue
     if ($option === "--abort") {
@@ -103,7 +105,6 @@ try {
       // How much the bet (and then the proportional payout)
 
       // We need the total betting pool, and we'll start with Dot's bet.
-      $issue = get_issue($pdo, $issue_id);
       $pool = (count(json_decode($issue["options"], True))*1000);
 
       // We must also collect the winners and determine their pool
@@ -190,11 +191,13 @@ try {
 
     }
 
+    // Push the resolution status to Discord
+    push_issue_resolution($webhooks, $issue["question"], $issue["cat"], $option, $pool);
+
     // This will let us load the issue, but disable the ability to alter it with the form
     $resolved = True;
 
   }
-
 
   // We are receiving a request to delete
   elseif (isset($_POST["delete_issue"])) {

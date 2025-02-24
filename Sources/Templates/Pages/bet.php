@@ -62,7 +62,7 @@ $pool = count($options)*1000;
 $tally = array();
 foreach ($bets as $bet) {
   $pool += $bet["volume"];
-  if (!array_key_exists($tally[$bet["opinion"]], $tally)) {
+  if (!isset($tally[$bet["opinion"]], $tally)) {
     $tally[$bet["opinion"]] = 1;
   } else {
     $tally[$bet["opinion"]] += 1;

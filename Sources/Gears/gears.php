@@ -41,7 +41,7 @@ function db_build($dbname) {
 }
 
 // Set any issues whose end is before the current time to pending
-$order = $pdo->prepare("UPDATE topics SET result = 1 WHERE ends < (?)");
+$order = $pdo->prepare("UPDATE topics SET result = 1 WHERE ends < (?) AND result < 2");
 $order->execute([time()]);
 
 // A function to produce an "s" if a supplied array has multiple items or an empty string if it's not
@@ -185,59 +185,117 @@ function new_issue($pdo, $issue_data) {
   return 0;
 }
 
+// Function to take json data and push it to a list of webhooks via CURL
+// Called via push_new_issue() and push_issue_resolution() and probably other things in the future
+// Returns a 0 if successful or a 1 if unsuccessful (with error log entry)
+function push_to_webhooks($webhooks, $json_data) {
+
+  try {
+
+    foreach ($webhooks as $webhook) {
+
+      $ch = curl_init($webhook);
+      curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
+      curl_setopt($ch, CURLOPT_POST, 1);
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+      curl_setopt($ch, CURLOPT_HEADER, 0);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+      // We currently do not collect or interpret the response, but here it is if we ever do
+      $response = curl_exec($ch);
+      curl_close($ch);
+
+    }
+
+  } catch (Throwable $e) {
+    error_log("--- Script error in gears.php (push_to_webhooks) (" . date("Y-m-d H:i:s ", time()) . ") ---\n" . $e . "\n\n", 3, $errors);
+    return 1;
+  }
+
+    return 0;
+}
+
 // Function to post an alert to all Discord webhook URLs alerting the presence of a new issue for betting
 // Called in the admin.php file on creating a new issue if new_issue returns a success response
-// Returns 0 for success or (presumably) dies
+// Returns 0 for success 1 for failure (via push_to_webhooks())
 function push_new_issue($webhooks, $name, $cat) {
 
   // We will translate the category to an appropriate Discord embed sidebar
-  $cat_colours = array(
-    "admin"     => "8e0891",
-    "economics" => "025b0c",
-    "conflict"  => "910808",
-    "sports"    => "ffbf00",
-    "sapphire"  => "0087ff",
-  );
+  $cat_colours = array("admin" => "8e0891", "economics" => "025b0c", "conflict" => "910808", "sports" => "ffbf00", "sapphire" => "0087ff");
 
   // Nowe we will construct the json object that will be sent to create the embed
   $json_data = json_encode([
-
     "username" => "Popcorn",
-    "avatar_url" => "https://pop.calref.ca/Static/Assets/logo.png",
-    "embeds" => [
-      [
+    "embeds" => [[
         "type" => "rich",
-        "description" => "## [" . $name . "](https://pop.calref.ca/)",
+        "description" => "### [" . $name . "](https://pop.calref.ca/)",
 
         "url" => "https://pop.calref.ca",
         "color" => hexdec($cat_colours[$cat]),
-
         "author" => [
           "name" => "New " . ucwords($cat) . " Issue Available for Betting:",
           "icon_url" => "https://pop.calref.ca/Static/Assets/planet.png"
         ],
-      ]
-    ]
-
+     ]]
   ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 
-  // Post to all webhooks that we know about
-  foreach ($webhooks as $webhook) {
+  // Call the actual publication and return
+  $return = push_to_webhooks($webhooks, $json_data);
+  return $return;
+}
 
-    $ch = curl_init($webhook);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+// Function to post an alert to all Discord webhook URLs alerting that a bet has resolved
+// Called in the resolve.php file on resolving an issue
+// Returns 0 for success 1 for failure (via push_to_webhooks())
+function push_issue_resolution($webhooks, $name, $cat, $option, $pool) {
 
-    $response = curl_exec($ch);
-    curl_close($ch);
+  // We will translate the category to an appropriate Discord embed sidebar
+  $cat_colours = array("admin" => "8e0891", "economics" => "025b0c", "conflict" => "910808", "sports" => "ffbf00", "sapphire" => "0087ff");
+
+  // Special response if the issue was refunded
+  if ($option === "--abort") {
+
+    $json_data = json_encode([
+      "username" => "Popcorn",
+      "embeds" => [[
+          "type" => "rich",
+          "description" => "The betting issue **" . $name
+                            . "** has been called off. All players who turned in a bet have been refunded in full.",
+
+          "url" => "https://pop.calref.ca",
+          "color" => hexdec($cat_colours[$cat]),
+          "author" => [
+            "name" => "Betting Issue Aborted:",
+            "icon_url" => "https://pop.calref.ca/Static/Assets/planet.png"
+          ],
+      ]]
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+
+  // Normal response if the issue was paid out
+  } else {
+
+    $json_data = json_encode([
+      "username" => "Popcorn",
+      "embeds" => [[
+          "type" => "rich",
+          "description" => "### [" . $name . "](https://pop.calref.ca/)\n\nThis issue has resolved in favour of `" . $option
+                            . "` and its `" . $pool . "` planet pool has been distributed.",
+
+          "url" => "https://pop.calref.ca",
+          "color" => hexdec($cat_colours[$cat]),
+          "author" => [
+            "name" => "Betting Issue Resolved:",
+            "icon_url" => "https://pop.calref.ca/Static/Assets/planet.png"
+          ],
+      ]]
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 
   }
 
-  return 0;
+  // Call the actual publication and return
+  $return = push_to_webhooks($webhooks, $json_data);
+  return $return;
 }
 
 // Function to commit a new bet for an issue to the database, including the operator's active tally
