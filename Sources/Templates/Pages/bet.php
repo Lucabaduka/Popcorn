@@ -24,8 +24,9 @@ $issue = get_issue($pdo, $issue_id);
 // Here, we are receiving an actual bid submission
 if (!isset($eligible) && (isset($_POST["option"]) && isset($_POST["bid"]))) {
 
-  // Try to run the new_bet function
   try {
+
+    // Try to run the new_bet function
     $send_bet = new_bet($pdo, $op, $_POST, $issue);
 
     // Get current operator information
@@ -87,7 +88,6 @@ if (!$issue) {
     "context" => "",
     "options" => json_encode(array(), JSON_FORCE_OBJECT),
   );
-
 
 // The issue has timed out or has moved to a pending stage
 } elseif ($issue["result"] === 3) {

@@ -306,9 +306,17 @@ function new_bet($pdo, $op, $data, $issue) {
   // Firstly is the bid a number?
   if (!is_numeric($data["bid"])) {
     return 1;
+
+  // Second, is the bet more than zero and affordable
+  } elseif ($data["bid"] < 1 || $data["bid"] > $op["max"]) {
+    return 1;
+
+  // Finally, make sure that the bid is not somehow over the operator's maximum
+  } elseif ($data["bid"] > $op["max"]) {
+    return 1;
   }
 
-  // Second, is the bid a valid option
+  // Now, we will check if the bid option was actually a valid option
   $pass = False;
   $options = json_decode($issue["options"], True);
   foreach($options as $key=>$val) {
@@ -319,14 +327,9 @@ function new_bet($pdo, $op, $data, $issue) {
     return 1;
   }
 
-  // Finally, make sure that the bid is not somehow over the operator's maximum
-  if ($data["bid"] > $op["max"]) {
-    return 1;
-  }
-
   // We are probably clear at this point to start updating the db
   // First commit the item to the bets table
-  $bet = array($issue["id"], $op["id"], $data["option"], $data["bid"]);
+  $bet = array($issue["id"], $op["id"], $data["option"], round($data["bid"]));
   $order = $pdo->prepare("INSERT INTO bets ('topic', 'operator', 'opinion', 'volume') VALUES (?, ?, ?, ?)");
   $order->execute($bet);
 
