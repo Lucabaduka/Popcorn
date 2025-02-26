@@ -17,10 +17,7 @@
 */
 
 $version = "1.0.0";
-
-// Load any libraries of functions and classes we've prepared earlier
-require("../Sources/Gears/gears.php");
-require("/var/www/calref/SSI.php"); // This is an absolute path to SMF's SSI
+$testing = False;  // Change to True to run locally
 
 // These are our webhooks to push updates to. This may become dynamic
 // and stored in the database late, but for now they are hard-coded
@@ -28,11 +25,20 @@ $webhooks = [
 
 ];
 
-// Testing
-// $context["user"]["is_logged"] = True;
-// $context["user"]["id"] = 1;
-// $context["user"]["name"] = "Luca";
-// $context["user"]["is_admin"] = True;
+// Load any libraries of functions and classes we've prepared earlier
+require("../Sources/Gears/gears.php");
+
+// We are running in production
+if (!$testing) {
+  require("/var/www/calref/SSI.php"); // This is an absolute path to SMF's SSI
+
+// We are testing locally
+} else {
+  $context["user"]["is_logged"] = True;
+  $context["user"]["id"] = 1;
+  $context["user"]["name"] = "Luca";
+  $context["user"]["is_admin"] = True;
+}
 
 // Set up our log wall. Palisades, if you will
 if (!$context["user"]["is_logged"]) {
