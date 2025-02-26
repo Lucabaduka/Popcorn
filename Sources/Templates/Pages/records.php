@@ -113,10 +113,13 @@ foreach ($pdo->query($query) as $issue) {
             <th class="is-link has-text-centered" data-sort="int"    data-dir="">Total Pool</th>
             <?php if ($logged): ?>
               <th class="is-link has-text-centered" data-sort="int"    data-dir="">Your Bet</th>
+              <th class="is-link has-text-centered" data-sort="int"    data-dir="">Your Opinion</th>
             <?php endif; ?>
             <th class="is-link has-text-centered" data-sort="string" data-dir="">Status</th>
             <th class="is-link has-text-centered" data-sort="string" data-dir="">Answer</th>
-            <th class="is-link has-text-centered" data-sort="int"    data-dir="">Payout</th>
+            <?php if ($logged): ?>
+              <th class="is-link has-text-centered" data-sort="int"    data-dir="">Payout</th>
+            <?php endif; ?>
           </tr>
         </thead>
 
@@ -131,9 +134,10 @@ foreach ($pdo->query($query) as $issue) {
 
         <?php else:
           foreach ($issues as $issue):
-            $options      = json_decode($issue["options"], True);
-            $issue_id     = $issue["id"];
-            $operator_bet = 0;
+            $options          = json_decode($issue["options"], True);
+            $issue_id         = $issue["id"];
+            $operator_bet     = 0;
+            $operator_opinion = "";
 
             // Load any existing bets and commit them to an array
             $bets = get_bets($pdo, $issue_id);
@@ -143,6 +147,7 @@ foreach ($pdo->query($query) as $issue) {
             foreach ($bets as $bet) {
               $pool += $bet["volume"];
               if ($bet["operator"] === $op["id"]) $operator_bet = number_format($bet["volume"]);
+              if ($bet["operator"] === $op["id"]) $operator_opinion = "<code class=\"is-size-7\">" . $bet["opinion"] . "</code>";
             }
 
             // Note that there is no pool for refunded issues, even historically
@@ -165,8 +170,10 @@ foreach ($pdo->query($query) as $issue) {
             <td><?=ucwords($issue["cat"])?></td>
             <td><?=$issue["question"]?></td>
             <td><code class="has-text-warning"><?=number_format($pool)?></code></td>
+
             <?php if ($logged): ?>
-              <td class="has-text-info"><code class="has-text-info"><?=$operator_bet?></code></td></td>
+              <td><code class="has-text-info"><?=$operator_bet?></code></td></td>
+              <td><?=$operator_opinion?></td></td>
             <?php endif; ?>
 
               <?php
@@ -188,7 +195,11 @@ foreach ($pdo->query($query) as $issue) {
 
             <td><?=$current?></td>
             <td><?=$issue["resolution"]?></td>
-            <td><?=get_payout($pdo, $issue["id"], $op["id"])?></td>
+
+            <?php if ($logged): ?>
+              <td><?=get_payout($pdo, $issue["id"], $op["id"])?></td>
+            <?php endif; ?>
+
           </tr>
 
           <?php endforeach; ?>
