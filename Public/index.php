@@ -60,94 +60,104 @@ $errors  = dirname(__DIR__, 1) . "/Sources/Data/error.log";
 $status = 0;
 $snacks = "";
 
-// Handle the routing to our blessed site
+// Determine the request we are receiving
 $request = $_SERVER["REQUEST_URI"];
 
-switch ($request) {
-  case "":
-  case "/":
-    include $pages . "main.php";
-    break;
+// Be prepared to handle and report an error
+try {
 
-    // Check someone is actually an admin before providing this page
-    case "/admin":
-
-    // Logged only
-    if (!$logged) {
-      include $pages . "login.php";
-      break;
-    }
-
-    if ($context["user"]["is_admin"]) {
-      include $pages . "admin.php";
-    } else {
-      http_response_code(403);
-      include $parts . "403.php";
-    }
-    break;
-
-  // Run a basic check that they're not navigating to the bet page directly
-  case "/bet":
-
-    // Logged only
-    if (!$logged) {
-      include $pages . "login.php";
-      break;
-    }
-
-    if (isset($_POST["bet_request"]) || (isset($_POST["bid"]) && isset($_POST["bet_request"]))) {
-      include $pages . "bet.php";
-    } else {
-      include $pages . "main.php";
-    }
-    break;
-
-  case "/login":
-
-    // Conversely, if we are already logged in, just go to main
-    if ($logged) {
+  // Handle the routing to our blessed site
+  switch ($request) {
+    case "":
+    case "/":
       include $pages . "main.php";
       break;
-    }
-    include $pages . "login.php";
-    break;
 
-  case "/records":
-    include $pages . "records.php";
-    break;
+      // Check someone is actually an admin before providing this page
+      case "/admin":
 
-  // Check someone is actually an admin before providing this page as well
-  case "/resolve":
+      // Logged only
+      if (!$logged) {
+        include $pages . "login.php";
+        break;
+      }
 
-    // Logged only
-    if (!$logged) {
+      if ($context["user"]["is_admin"]) {
+        include $pages . "admin.php";
+      } else {
+        http_response_code(403);
+        include $parts . "403.php";
+      }
+      break;
+
+    // Run a basic check that they're not navigating to the bet page directly
+    case "/bet":
+
+      // Logged only
+      if (!$logged) {
+        include $pages . "login.php";
+        break;
+      }
+
+      if (isset($_POST["bet_request"]) || (isset($_POST["bid"]) && isset($_POST["bet_request"]))) {
+        include $pages . "bet.php";
+      } else {
+        include $pages . "main.php";
+      }
+      break;
+
+    case "/login":
+
+      // Conversely, if we are already logged in, just go to main
+      if ($logged) {
+        include $pages . "main.php";
+        break;
+      }
       include $pages . "login.php";
       break;
-    }
 
-    if ($context["user"]["is_admin"] && isset($_POST["resolve_issue"])) {
-      include $pages . "resolve.php";
-    } else {
-      http_response_code(403);
-      include $parts . "403.php";
-    }
-    break;
-
-  case "/suggest":
-
-    // Logged only
-    if (!$logged) {
-      include $pages . "login.php";
+    case "/records":
+      include $pages . "records.php";
       break;
-    }
 
-    include $pages . "suggest.php";
-    break;
+    // Check someone is actually an admin before providing this page as well
+    case "/resolve":
 
-  // Provide a 404 response for all url params we don't understand
-  default:
-    http_response_code(404);
-    include $parts . "404.php";
+      // Logged only
+      if (!$logged) {
+        include $pages . "login.php";
+        break;
+      }
+
+      if ($context["user"]["is_admin"] && isset($_POST["resolve_issue"])) {
+        include $pages . "resolve.php";
+      } else {
+        http_response_code(403);
+        include $parts . "403.php";
+      }
+      break;
+
+    case "/suggest":
+
+      // Logged only
+      if (!$logged) {
+        include $pages . "login.php";
+        break;
+      }
+
+      include $pages . "suggest.php";
+      break;
+
+    // Provide a 404 response for all url params we don't understand
+    default:
+      http_response_code(404);
+      include $parts . "404.php";
+  }
+
+} catch (Throwable $e) {
+  http_response_code(500);
+  include $parts . "500.php";
+  error_log("--- Script error in routing [" . $request . "] (" . date("Y-m-d H:i:s ", time()) . ") ---\n" . $e . "\n\n", 3, $errors);
 }
 
 ?>
