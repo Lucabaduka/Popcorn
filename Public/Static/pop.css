@@ -90,48 +90,8 @@ td {
   border: none;
 }
 
-/* Sortable tables */
-
-[data-sort]:hover       {cursor: pointer;}
-[data-dir=""]:after     {content: " ⬍";}
-[data-dir="asc"]:after  {content: " ⬆";}
-[data-dir="desc"]:after {content: " ⬇";}
-
 /* Custom Styles */
 
-.bid-option {
-  display: block;
-  padding: 20px;
-  border: 1px solid;
-  margin: 10px;
-  border-radius: 8px;
-  color: #FFF;
-  -moz-transition: all 0.5s;
-  -webkit-transition: all 0.5s;
-  -o-transition: all 0.5s;
-  transition: all 0.5s;
-}
-.bid-option:has(:checked) {
-  font-weight:bold;
-}
-.admin .bid-option                   {background: #120b15; border-color: #591A62;}
-.admin .bid-option:has(:checked)     {background: #1f022c; border-color: #F700FF;}
-.conflict .bid-option                {background: #150b0b; border-color: #621A1A;}
-.conflict .bid-option:has(:checked)  {background: #2c0202; border-color: #F00;}
-.economics .bid-option               {background: #0b150b; border-color: #26621A;}
-.economics .bid-option:has(:checked) {background: #0d2c02; border-color: #2CFF00;}
-.sports .bid-option                  {background: #15130b; border-color: #62571A;}
-.sports .bid-option:has(:checked)    {background: #2c2202; border-color: #FFA700;}
-.sapphire .bid-option                {background: #0b1115; border-color: #1A4A62;}
-.sapphire .bid-option:has(:checked)  {background: #02122c; border-color: #0064FF;}
-
-.bid-option:hover:not(:has([disabled])) {
-  border-color: #FFEB9E;
-}
-
-.card-footer-item:hover > p{
-  filter: drop-shadow(1px 1px 5px #c4c4c4db);
-}
 .centre, .center {
   justify-content: center;
   text-align: center;
@@ -170,6 +130,14 @@ td {
   position: relative;
   height: 20px;
 }
+.id-fader {
+  position: absolute;
+  font-size: 4em;
+  top: -23px;
+  z-index: 1;
+  font-weight: bold;
+  left: 2px;
+}
 .odds {
   margin: 0 auto;
   text-align: center;
@@ -186,14 +154,40 @@ td {
   rotate: 45deg;
 }
 
-tr.admin     {background: linear-gradient(to right, #59025b8a, transparent 25%);}
-tr.conflict  {background: linear-gradient(to right, #5b02028a, transparent 25%);}
-tr.economics {background: linear-gradient(to right, #025b0c8a, transparent 25%);}
-tr.sports    {background: linear-gradient(to right, #937c008a, transparent 25%);}
-tr.sapphire  {background: linear-gradient(to right, #0062b98a, transparent 25%);}
+/* Cards and Bids */
 
-/* Card hell */
+.bid-option {
+  display: block;
+  padding: 20px;
+  border: 1px solid;
+  margin: 10px;
+  border-radius: 8px;
+  color: #FFF;
+  -moz-transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
+}
+.bid-option:has(:checked) {
+  font-weight:bold;
+}
+.admin .bid-option                   {background: #120b15; border-color: #591A62;}
+.admin .bid-option:has(:checked)     {background: #1f022c; border-color: #F700FF;}
+.conflict .bid-option                {background: #150b0b; border-color: #621A1A;}
+.conflict .bid-option:has(:checked)  {background: #2c0202; border-color: #F00;}
+.economics .bid-option               {background: #0b150b; border-color: #26621A;}
+.economics .bid-option:has(:checked) {background: #0d2c02; border-color: #2CFF00;}
+.sports .bid-option                  {background: #15130b; border-color: #62571A;}
+.sports .bid-option:has(:checked)    {background: #2c2202; border-color: #FFA700;}
+.sapphire .bid-option                {background: #0b1115; border-color: #1A4A62;}
+.sapphire .bid-option:has(:checked)  {background: #02122c; border-color: #0064FF;}
 
+.bid-option:hover:not(:has([disabled])) {
+  border-color: #FFEB9E;
+}
+.card-footer-item:hover > p{
+  filter: drop-shadow(1px 1px 5px #c4c4c4db);
+}
 .card.admin     {border-color: #8e0891a3;}
 .card.conflict  {border-color: #910808a3;}
 .card.economics {border-color: #025b0ca3;}
@@ -205,15 +199,6 @@ tr.sapphire  {background: linear-gradient(to right, #0062b98a, transparent 25%);
 .economics .card-header {background: linear-gradient(170deg, #025b0c -100%, transparent);}
 .sports .card-header    {background: linear-gradient(170deg, #ffbf00 -100%, transparent);}
 .sapphire .card-header  {background: linear-gradient(170deg, #0087ff -100%, transparent);}
-
-.id-fader {
-  position: absolute;
-  font-size: 4em;
-  top: -23px;
-  z-index: 1;
-  font-weight: bold;
-  left: 2px;
-}
 .bid .id-fader {
   right: 2px;
   left: unset;
@@ -223,7 +208,6 @@ tr.sapphire  {background: linear-gradient(to right, #0062b98a, transparent 25%);
 .economics .id-fader {color: #239a0b21;}
 .sports .id-fader    {color: #c1b20d36;}
 .sapphire .id-fader  {color: #09A8D92E;}
-
 .title.admin, .title.conflict, .title.economics, .title.sports, .title.sapphire {
   max-width: 750px;
   padding: 6px;
@@ -259,17 +243,10 @@ tr.sapphire  {background: linear-gradient(to right, #0062b98a, transparent 25%);
   margin-right: 0.25rem;
 }
 .ico-planet:after {
-  content: '';
-  display: block;
   height: 1.2em;
   width: 1.2em;
-  background-size: contain;
-  margin-left: 0.25em;
   margin-right: 0em;
   margin-bottom: -.3em;
-}
-code .ico-planet:after {
-  margin-left: 0em;
 }
 
 .ico-dot:after      {background-image: url("/Static/Assets/dot.svg");}
@@ -279,14 +256,8 @@ code .ico-planet:after {
 .ico-popcorn:after  {background-image: url("/Static/Assets/popcorn.svg");}
 .ico-planet:after   {background-image: url("/Static/Assets/planet.png");}
 
-.navbar-end {
-  margin-right: 2em;
-}
-.navbar-item {
-  gap: 0.3rem;
-}
-
 /* Login */
+
 .bar {
   background: url("/Static/Assets/cat.png"), #043300;
   border-radius: 6px 6px 0 0;
@@ -323,9 +294,6 @@ code .ico-planet:after {
 }
 .ssi_table input, .ssi_table button {
   width: 100%;
-}
-.is-inline-grid {
-  display: inline-grid;
 }
 
 /* Notifs */
@@ -376,3 +344,15 @@ code .ico-planet:after {
 @keyframes fadein {from {top: 0; opacity: 0;} to {top: 30px; opacity: 1;}}
 @-webkit-keyframes fadeout {from {top: 30px; opacity: 1;} to {top: 0; opacity: 0;}}
 @keyframes fadeout {from {top: 30px; opacity: 1;} to {top: 0; opacity: 0;}}
+
+/* Tables and Sortable tables */
+
+[data-sort]:hover       {cursor: pointer;}
+[data-dir=""]:after     {content: "⬍";}
+[data-dir="asc"]:after  {content: "⬆";}
+[data-dir="desc"]:after {content: "⬇";}
+tr.admin     {background: linear-gradient(to right, #59025b8a, transparent 25%);}
+tr.conflict  {background: linear-gradient(to right, #5b02028a, transparent 25%);}
+tr.economics {background: linear-gradient(to right, #025b0c8a, transparent 25%);}
+tr.sports    {background: linear-gradient(to right, #937c008a, transparent 25%);}
+tr.sapphire  {background: linear-gradient(to right, #0062b98a, transparent 25%);}
