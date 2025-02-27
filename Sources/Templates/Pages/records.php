@@ -110,15 +110,15 @@ foreach ($pdo->query($query) as $issue) {
             <th class="is-link has-text-centered" data-sort="int"    data-dir="">ID</th>
             <th class="is-link has-text-centered" data-sort="string" data-dir="">Category</th>
             <th class="is-link has-text-centered" data-sort="string" data-dir="">Question</th>
-            <th class="is-link has-text-centered" data-sort="int"    data-dir="">Total Pool</th>
+            <th class="is-link has-text-centered" data-sort="int"    data-dir="">Pool</th>
             <?php if ($logged): ?>
-              <th class="is-link has-text-centered" data-sort="int"    data-dir="">Your Bet</th>
-              <th class="is-link has-text-centered" data-sort="int"    data-dir="">Your Opinion</th>
+              <th class="is-link has-text-centered" data-sort="int"  data-dir="">Bet</th>
+              <th class="is-link has-text-centered" data-sort="int"  data-dir="">Opinion</th>
             <?php endif; ?>
             <th class="is-link has-text-centered" data-sort="string" data-dir="">Status</th>
             <th class="is-link has-text-centered" data-sort="string" data-dir="">Answer</th>
             <?php if ($logged): ?>
-              <th class="is-link has-text-centered" data-sort="int"    data-dir="">Payout</th>
+              <th class="is-link has-text-centered" data-sort="int"  data-dir="">Payout</th>
             <?php endif; ?>
           </tr>
         </thead>
