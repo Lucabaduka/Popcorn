@@ -46,7 +46,7 @@
       <div class="bar">
         <h1 class="title is-4">Log In</h1>
       </div>
-      <div class="subbox p-2">
+      <div class="p-2">
         <div class="info center mx-2 my-4">
           <p>
             You need to be signed in with a CalRef account to use Popcorn. Login here or through the forum.

@@ -113,7 +113,7 @@ if (!$issue) {
 
 // If we found anything that invalidated the operator's attempts, report it here
 if ($expired != "required") {
-  $expired_message = "<div class=\"notification center has-background-danger-dark has-text-warning-light\">
+  $expired_message = "<div class=\"notification center info\">
     <p class=\"title is-4\">~ Betting Disabled ~</p>
     <p>" . $expired_reason . "</p>
   </div>";

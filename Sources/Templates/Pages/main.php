@@ -43,7 +43,8 @@ foreach ($pdo->query($query) as $issue) {
 // Make a random tagline subtitle for the day
 $taglines = [
   "Lofi Bets to Chill and Watch the World Burn to",
-  "My alternate name idea was the \"Irish Kneebreaker Association\", but Emily said no.",
+  "My alternate name idea was the \"Irish Kneecap Breaker Association\", but Emily said no.",
+  "Water has a pH of 7, but Popcorn has a PHP of 8."
   ];
 $seed = floor(time()/86400);
 srand($seed);
