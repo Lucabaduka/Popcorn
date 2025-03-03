@@ -1,5 +1,5 @@
 <footer class="hero-foot is-flex center">
-  <div class="foot-content my-2">
+  <div class="is-flex centre-align my-2">
     <figure class="image depth is-32x32">
       <a href="https://calref.ca/"><img height="32" width="32" src="./Static/Assets/icon.svg" alt="CalRef Logo" aria-label="Visit Calamity Refuge"></a>
     </figure>

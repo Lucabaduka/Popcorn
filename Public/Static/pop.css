@@ -2,7 +2,6 @@
 
 @media only screen and (max-width: 767px) {
   .mflex {display: block;}
-  .mline {justify-content: center;}
   .mslim {display: none;}
   .mclear {clear:both;}
   .login {width: 100%;}
@@ -20,7 +19,6 @@
 }
 @media only screen and (min-width: 768px) {
   .mflex {display: flex;}
-  .mline {justify-content: end;}
   .mobile {display: none;}
   .navbar:first-child {margin-left: 3rem;}
   .navbar:last-child {margin-right: 3rem;}
@@ -119,10 +117,6 @@ td {
   background: #1b223f;
   border-color: #ffc439b8;
 }
-.foot-content {
-  display: flex;
-  align-items: center;
-}
 .glow {
   filter: drop-shadow(1px 1px 5px #c4c4c4db);
 }
@@ -142,13 +136,6 @@ td {
   margin: 0 auto;
   text-align: center;
   width: max-content;
-}
-.overview {
-  width: 200px;
-  position: fixed;
-  right: 25px;
-  bottom: 1em;
-  z-index: 1;
 }
 .slap {
   rotate: 45deg;
