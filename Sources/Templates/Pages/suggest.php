@@ -67,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   <!-- Content -->
   <div class="container hero-body mclear py-4">
     <div class="notification">
-      <h1 class="title">Suggest a Bet</h1>
+      <h1 class="title">Suggest a Topic</h1>
       <div class="content is-primary">
         <p>
           Note that in order for a suggestion to be accepted, it has to be undetermined, tangible, and deliverable.
@@ -78,8 +78,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         <form method="POST">
           <div class="field">
-          <label class="label" for="delivery">What is the premise of the bet?</label>
-            <textarea id="idea" name="idea" class="textarea is-medium">And also possibly its options</textarea>
+          <label class="label" for="idea">What is the bet idea and its options?</label>
+            <textarea id="idea" name="idea" class="textarea is-medium"></textarea>
           </div>
 
           <div class="field">
