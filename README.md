@@ -19,7 +19,7 @@ Every current and past issue, along with their outcomes are posted to the record
 
 1. Clone the repository into the directory of your choosing, or download the repository and upload/extract it to where it will be run.
 
-2. If CURL is not bundled in your PHP install, you will need to get it for your version number. On Debian/Ubuntu, you can grab this with `sudo apt install php8.2-curl` or whatever version of php you installed.
+2. If CURL is not bundled in your PHP install, you will need to get it for your version number. On Debian/Ubuntu, you can grab this with `sudo apt install php8.2-curl` or whatever version of php you installed. Also you may need to get the PDO drivers with `sudo apt install php8.2-sqlite`.
 
 3. Set the directory to you local [SMF SSI](https://wiki.simplemachines.org/smf/SSI_FAQ_Basic) location (along with any optional webhook URLs you want) in the top few lines of `Public/index.php`
 
